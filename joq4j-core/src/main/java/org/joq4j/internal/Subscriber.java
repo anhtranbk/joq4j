@@ -1,4 +1,4 @@
-package org.joq4j.core;
+package org.joq4j.internal;
 
 /**
  * TODO: Class description here.
@@ -9,7 +9,7 @@ public interface Subscriber {
 
     void onSubscribe(String channel);
 
-    void onMessage(String channel, byte[] message);
+    void onMessage(String channel, String message);
 
     void onUnsubscribe(String channel);
 }

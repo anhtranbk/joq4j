@@ -4,13 +4,13 @@ import java.util.Date;
 
 public interface Job {
 
+    boolean cancel();
+
     String getId();
 
-    String getDescription();
+    JobOptions getOptions();
 
     JobStatus getStatus();
-
-    JobCallback getCallback();
 
     String getOrigin();
 

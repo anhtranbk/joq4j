@@ -1,9 +1,10 @@
 package org.joq4j;
 
-import org.joq4j.core.Subscriber;
+import org.joq4j.internal.Subscriber;
 
 import java.io.Closeable;
 import java.util.List;
+import java.util.Map;
 
 public interface Broker extends Closeable {
 
@@ -17,7 +18,7 @@ public interface Broker extends Closeable {
 
     void set(String key, String value);
 
-    void remove(String key);
+    String remove(String key);
 
     void appendToList(String key, String... values);
 
@@ -25,13 +26,17 @@ public interface Broker extends Closeable {
     
     List<String> getList(String key);
 
-    void removeList(String key);
+    List<String> removeList(String key);
+
+    void putMap(String key, Map<String, String> fieldMap);
 
     void putToMap(String key, String field, String value);
 
     String getFromMap(String key, String field);
 
+    Map<String, String> getMap(String key);
+
     String removeFromMap(String key, String field);
 
-    void removeMap(String key);
+    Map<String, String> removeMap(String key);
 }

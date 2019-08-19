@@ -21,21 +21,21 @@ public @Data class JobOptions {
      * integer(e.g. 2, '2'). Furthermore, it can be a string with specify unit
      * including hour, minute, second(e.g. '1h', '3m', '5s').
      */
-    private long jobTimeout;
+    private long jobTimeout = 600;
     /**
      * Specifies how long (in seconds) successful jobs and their results are kept.
      * Expired jobs will be automatically deleted. Defaults to 500 seconds.
      */
-    private long resultTtl;
+    private long resultTtl = 500;
     /**
      * Specifies how long failed jobs are kept (defaults to 1 year)
      */
-    private long failureTtl;
+    private long failureTtl = 31536000;
     /**
      * Specifies the maximum queued time of the job before it’s discarded. If you
      * specify a value of -1 you indicate an infinite job ttl and it will run indefinitely
      */
-    private long ttl;
+    private long ttl = -1;
 
     private JobPriority jobPriority;
 }

@@ -1,43 +1,47 @@
-package org.joq4j.core;
+package org.joq4j.internal;
 
+import lombok.Getter;
 import org.joq4j.AsyncResult;
 import org.joq4j.AsyncTask;
 import org.joq4j.Broker;
 import org.joq4j.Job;
-import org.joq4j.JobCallback;
 import org.joq4j.JobOptions;
 import org.joq4j.JobQueue;
-import org.joq4j.JobStatus;
-import org.joq4j.QueueOptions;
+import org.joq4j.serde.Deserializer;
+import org.joq4j.serde.SerdeFactory;
+import org.joq4j.serde.Serializer;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class JobQueueImpl implements JobQueue {
 
-    private static final String QUEUE_KEY_PREFIX = "jq:queue";
-    private static final String JOB_KEY_PREFIX = "jq:job";
+    private static final String QUEUE_KEY_PREFIX = "jq:queue:";
 
     private final String name;
     private final String queueKey;
-    private final QueueOptions options;
     private final Broker broker;
 
-    public JobQueueImpl(String name, QueueOptions options, Broker broker) {
+    private final long defaultTimeout;
+    private final boolean async;
+    private final Serializer serializer;
+    private final Deserializer deserializer;
+
+    public JobQueueImpl(String name, Broker broker, SerdeFactory serdeFactory,
+                        long defaultTimeout, boolean async) {
         this.name = name;
-        this.queueKey = QUEUE_KEY_PREFIX + ":" + this.name;
-        this.options = options;
+        this.queueKey = QUEUE_KEY_PREFIX + this.name;
+        this.defaultTimeout = defaultTimeout;
+        this.async = async;
         this.broker = broker;
+        this.serializer = serdeFactory.createSerializer();
+        this.deserializer = serdeFactory.createDeserializer();
     }
 
     @Override
     public String getName() {
         return this.name;
-    }
-
-    @Override
-    public QueueOptions getOptions() {
-        return this.options;
     }
 
     @Override
@@ -57,12 +61,14 @@ public class JobQueueImpl implements JobQueue {
 
     @Override
     public boolean isExists(String jobId) {
-        return !broker.get(JobImpl.generateJobKey(jobId)).isEmpty();
+        return broker.get(JobImpl.generateJobKey(jobId)) != null;
     }
 
     @Override
     public Job restoreJob(String jobId) {
-        return null;
+        JobImpl job = new JobImpl(this, null, new JobOptions());
+        job.restoreFromBroker();
+        return job;
     }
 
     @Override
@@ -77,31 +83,20 @@ public class JobQueueImpl implements JobQueue {
 
     @Override
     public AsyncResult enqueue(AsyncTask task) {
-        JobOptions jobOptions = new JobOptions().setJobTimeout(this.options.getDefaultTimeout());
+        JobOptions jobOptions = new JobOptions().setJobTimeout(this.defaultTimeout);
         return enqueue(task, jobOptions);
     }
 
     @Override
     public AsyncResult enqueue(AsyncTask task, JobOptions options) {
-        return enqueue(task, options, null);
-    }
-
-    @Override
-    public AsyncResult enqueue(AsyncTask task, JobCallback callback) {
-        JobOptions jobOptions = new JobOptions().setJobTimeout(this.options.getDefaultTimeout());
-        return enqueue(task, jobOptions, callback);
-    }
-
-    @Override
-    public AsyncResult enqueue(AsyncTask task, JobOptions options, JobCallback callback) {
-        JobImpl job = new JobImpl(task, this, this.broker, options, callback, options.getJobId());
-        String data = this.options.getSerializer().serializeAsBase64(job);
-        job.setStatus(JobStatus.QUEUED);
+        JobImpl job = new JobImpl(this, task, options);
+        job.initNewJob();
+        broker.appendToList(queueKey, job.getId());
         return new AsyncResultImpl(job);
     }
 
     @Override
-    public Job nextJob() {
+    public Job nextJob(String worker) {
         String jobId = broker.popFromList(queueKey);
         return restoreJob(jobId);
     }

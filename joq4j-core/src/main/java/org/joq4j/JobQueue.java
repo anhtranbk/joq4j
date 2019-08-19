@@ -1,12 +1,17 @@
 package org.joq4j;
 
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import org.joq4j.broker.MemoryBroker;
+import org.joq4j.internal.JobQueueImpl;
+import org.joq4j.serde.JavaSerdeFactory;
+import org.joq4j.serde.SerdeFactory;
+
 import java.util.List;
 
 public interface JobQueue {
 
     String getName();
-
-    QueueOptions getOptions();
 
     List<String> getAllJobIds();
 
@@ -24,15 +29,29 @@ public interface JobQueue {
 
     AsyncResult enqueue(AsyncTask task, JobOptions options);
 
-    AsyncResult enqueue(AsyncTask task, JobCallback callback);
-
-    AsyncResult enqueue(AsyncTask task, JobOptions options, JobCallback callback);
-
-    Job nextJob();
+    Job nextJob(String worker);
 
     Job cleanJob(String jobId);
 
     void clear();
 
     void delete(boolean deleteJobsFirst);
+
+    @Accessors(fluent = true)
+    @Setter
+    class Builder {
+        private String name = "default";
+        private SerdeFactory serializationFactory = new JavaSerdeFactory();
+        private long defaultTimeout = 600L;
+        private boolean async = true;
+        private Broker broker = new MemoryBroker();
+
+        public JobQueue build() {
+            return new JobQueueImpl(name, broker, serializationFactory, defaultTimeout, async);
+        }
+    }
+
+    static Builder builder() {
+        return new Builder();
+    }
 }

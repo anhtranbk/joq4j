@@ -1,7 +1,10 @@
-package org.joq4j.core;
+package org.joq4j.internal;
 
 import org.joq4j.AsyncResult;
+import org.joq4j.JobCallback;
 
+import java.util.concurrent.Executor;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -9,13 +12,13 @@ public class AsyncResultImpl implements AsyncResult {
 
     private final JobImpl job;
 
-    public AsyncResultImpl(JobImpl job) {
+    AsyncResultImpl(JobImpl job) {
         this.job = job;
     }
 
     @Override
     public boolean cancel(boolean b) {
-        return false;
+        return job.cancel();
     }
 
     @Override
@@ -41,5 +44,15 @@ public class AsyncResultImpl implements AsyncResult {
     @Override
     public Object get(long l, TimeUnit timeUnit) throws TimeoutException {
         return job.waitForJobResult(timeUnit.toMillis(l));
+    }
+
+    @Override
+    public void addCallback(JobCallback callback) {
+        addCallback(callback, ForkJoinPool.commonPool());
+    }
+
+    @Override
+    public void addCallback(JobCallback callback, Executor executor) {
+        throw new UnsupportedOperationException();
     }
 }

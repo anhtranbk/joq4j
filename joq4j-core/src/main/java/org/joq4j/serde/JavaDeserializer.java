@@ -9,7 +9,7 @@ import java.io.ObjectInputStream;
  * @author <a href="https://github.com/tjeubaoit">tjeubaoit</a>
  */
 @SuppressWarnings("unchecked")
-public class JavaDeserialize implements Deserializer {
+public class JavaDeserializer implements Deserializer {
 
     @Override
     public Object deserialize(InputStream in) {

@@ -4,9 +4,7 @@ import org.joq4j.AsyncResult;
 import org.joq4j.AsyncTask;
 import org.joq4j.Broker;
 import org.joq4j.JobQueue;
-import org.joq4j.QueueOptions;
 import org.joq4j.broker.RedisBroker;
-import org.joq4j.core.JobQueueImpl;
 
 /**
  * TODO: Class description here.
@@ -17,7 +15,7 @@ public class DemoApp {
 
     public static void main(String[] args) throws Exception {
         Broker broker = new RedisBroker("localhost");
-        JobQueue queue = new JobQueueImpl("default", new QueueOptions(), broker);
+        JobQueue queue = JobQueue.builder().broker(broker).build();
         AsyncTask task = new AsyncTask() {
             @Override
             public boolean isCancelable() {

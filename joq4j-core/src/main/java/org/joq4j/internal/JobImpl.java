@@ -164,16 +164,6 @@ public class JobImpl implements Job {
 
         setBatchFields(fieldMap);
         setStatus(JobStatus.QUEUED);
-
-        System.out.println("Set field success");
-        Map<String, String> map = broker.getMap(generateJobKey(this.jobId));
-        System.out.println("Map size " + map.size());
-        for (String key : map.keySet()) {
-            System.out.println("map: " + key + ": " + map.get(key));
-        }
-        for (String key : map.keySet()) {
-            System.out.println(key + ": " + broker.getFromMap(generateJobKey(jobId), key));
-        }
     }
 
     public void restoreFromBroker() {

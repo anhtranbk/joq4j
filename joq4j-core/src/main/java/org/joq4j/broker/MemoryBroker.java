@@ -10,6 +10,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Only for testing, do not use this broker for production !
+ */
 public class MemoryBroker implements Broker {
 
     private Map<String, List<String>> listMap = new HashMap<>();
@@ -64,7 +67,11 @@ public class MemoryBroker implements Broker {
 
     @Override
     public String popFromList(String key) {
-        return listMap.get(key).remove(0);
+        try {
+            return listMap.get(key).remove(0);
+        } catch (NullPointerException | IndexOutOfBoundsException ignored) {
+            return null;
+        }
     }
 
     @Override
@@ -89,7 +96,7 @@ public class MemoryBroker implements Broker {
 
     @Override
     public String getFromMap(String key, String field) {
-        return mapMap.get(key).get(field);
+        return mapMap.computeIfAbsent(key, k -> new HashMap<>()).get(field);
     }
 
     @Override
@@ -99,7 +106,7 @@ public class MemoryBroker implements Broker {
 
     @Override
     public String removeFromMap(String key, String field) {
-        return mapMap.get(key).remove(field);
+        return mapMap.computeIfAbsent(key, k -> new HashMap<>()).remove(field);
     }
 
     @Override

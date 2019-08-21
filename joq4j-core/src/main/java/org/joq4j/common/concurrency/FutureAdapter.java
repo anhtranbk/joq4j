@@ -56,21 +56,6 @@ public class FutureAdapter<S, R> implements Future<R> {
         return converter.convert(src.get(timeout, unit));
     }
 
-//    @Override
-//    public void addListener(Runnable runnable, Executor executor) {
-//        if (src instanceof ListenableFuture) {
-//            ((ListenableFuture) src).addListener(runnable, executor);
-//        } else {
-//            executor.perform(() -> {
-//                try {
-//                    get();
-//                    runnable.run();
-//                } catch (Exception ignored) {
-//                }
-//            });
-//        }
-//    }
-
     /**
      *
      * @param src

@@ -5,18 +5,20 @@ import org.joq4j.Broker;
 import org.joq4j.Job;
 import org.joq4j.JobOptions;
 import org.joq4j.JobQueue;
-import org.joq4j.QueueOptions;
+import org.joq4j.JobStatus;
 import org.joq4j.broker.MemoryBroker;
-import org.joq4j.serde.JavaDeserializer;
+import org.joq4j.common.utils.Utils;
 import org.joq4j.serde.JavaSerdeFactory;
-import org.joq4j.serde.JavaSerializer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class JobQueueImplTest {
 
@@ -42,22 +44,15 @@ public class JobQueueImplTest {
     }
 
     private JobQueueImpl queue;
-    private QueueOptions options;
     private SimpleTask simpleTask;
-    private Broker broker;
 
     @Before
     public void setUp() throws Exception {
-        options = new QueueOptions()
-                .setAsync(false)
-                .setDefaultTimeout(500)
-                .setMaxSize(100)
-                .setSerializer(new JavaSerializer())
-                .setDeserializer(new JavaDeserializer());
-        broker = new MemoryBroker();
+        Broker broker = new MemoryBroker();
         simpleTask = new SimpleTask(4, 9);
 
         queue = (JobQueueImpl) JobQueue.builder()
+                .name("test")
                 .async(true)
                 .defaultTimeout(500)
                 .serializationFactory(new JavaSerdeFactory())
@@ -67,6 +62,7 @@ public class JobQueueImplTest {
 
     @After
     public void tearDown() throws Exception {
+        queue.getBroker().close();
     }
 
     @Test
@@ -92,7 +88,7 @@ public class JobQueueImplTest {
         int numJobs = 5;
         for (int i = 0; i < numJobs; i++) {
             queue.enqueue(simpleTask, new JobOptions().setJobId("job_" + i)
-                    .setDescription("job_description_")
+                    .setDescription("job_description_" + i)
                     .setJobTimeout(100 * i));
         }
         List<Job> jobs = queue.getAllJobs();
@@ -146,21 +142,83 @@ public class JobQueueImplTest {
 
     @Test
     public void enqueue() {
+        int numJobs = 5;
+        for (int i = 0; i < numJobs; i++) {
+            queue.enqueue(simpleTask, new JobOptions()
+                    .setJobId("job_" + i)
+                    .setDescription("job_description_" + i));
+
+            Job job = queue.restoreJob("job_" + i);
+            assertEquals(JobStatus.QUEUED, job.getStatus());
+            assertNotNull(job.getEnqueuedAt());
+            assertEquals(job.getId(), Utils.lastItem(queue.getAllJobIds()));
+        }
     }
 
     @Test
     public void nextJob() {
+        int numJobs = 5;
+        for (int i = 0; i < numJobs; i++) {
+            queue.enqueue(simpleTask, new JobOptions()
+                    .setJobId("job_" + i)
+                    .setDescription("job_description_" + i));
+        }
+        queue.enqueue(simpleTask, new JobOptions().setJobId("job_test"));
+
+        for (int i = 0; i < numJobs; i++) {
+            Job job = queue.nextJob("test");
+            assertEquals("job_" + i, job.getId());
+            assertEquals("job_description_" + i, job.getOptions().getDescription());
+        }
+        Job job = queue.nextJob("test");
+        assertEquals("job_test", job.getId());
+        assertTrue(job.getOptions().getDescription().isEmpty());
     }
 
     @Test
-    public void cleanJob() {
+    public void removeJob() {
+        int numJobs = 7;
+        for (int i = 0; i < numJobs; i++) {
+            queue.enqueue(simpleTask, new JobOptions()
+                    .setJobId("job_" + i)
+                    .setDescription("job_description_" + i));
+        }
+
+        int last = numJobs - 1;
+
+        Job jobFirst = queue.removeJob("job_0");
+        assertEquals("job_description_0", jobFirst.getOptions().getDescription());
+
+        Job jobLast = queue.removeJob("job_" + last);
+        assertEquals("job_description_" + last, jobLast.getOptions().getDescription());
+
+        assertEquals(numJobs - 2, queue.getTotalJob());
+
+        assertFalse(queue.isExists("job_0"));
+        assertFalse(queue.isExists("job_" + last));
+        for (int i = 1; i < numJobs - 1; i++) {
+            assertTrue(queue.isExists("job_" + i));
+        }
+
+        List<String> jobIds = queue.getAllJobIds();
+        assertFalse(jobIds.contains(jobFirst.getId()));
+        assertFalse(jobIds.contains(jobLast.getId()));
+
+        Job job = queue.nextJob("test");
+        assertEquals("job_1", job.getId());
     }
 
     @Test
     public void clear() {
-    }
+        int numJobs = 7;
+        for (int i = 0; i < numJobs; i++) {
+            queue.enqueue(simpleTask, new JobOptions()
+                    .setJobId("job_" + i)
+                    .setDescription("job_description_" + i));
+        }
+        queue.clear();
 
-    @Test
-    public void delete() {
+        assertTrue(queue.isEmpty());
+        assertEquals(0,queue.getTotalJob());
     }
 }

@@ -78,7 +78,7 @@ public class ThreadPool {
                     ? new LinkedBlockingQueue<>()
                     : new ArrayBlockingQueue<>(queueSize);
             if (threadFactory == null) {
-                threadFactory = new HeimdallThreadFactory(namePrefix, daemon);
+                threadFactory = new Joq4jThreadFactory(namePrefix, daemon);
             }
             return new ThreadPoolExecutor(coreSize,
                     maxSize,
@@ -89,13 +89,13 @@ public class ThreadPool {
         }
     }
 
-    static class HeimdallThreadFactory implements ThreadFactory {
+    static class Joq4jThreadFactory implements ThreadFactory {
 
         private final AtomicInteger threadNumber = new AtomicInteger(1);
         private final String namePrefix;
         private final boolean daemon;
 
-        HeimdallThreadFactory(String prefix, boolean daemon) {
+        Joq4jThreadFactory(String prefix, boolean daemon) {
             this.namePrefix = prefix + "-";
             this.daemon = daemon;
         }

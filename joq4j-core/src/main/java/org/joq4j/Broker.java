@@ -23,6 +23,8 @@ public interface Broker extends Closeable {
     void appendToList(String key, String... values);
 
     String popFromList(String key);
+
+    void removeFromList(String key, String value);
     
     List<String> getList(String key);
 

@@ -5,7 +5,6 @@ import org.joq4j.internal.Subscriber;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPubSub;
-import redis.clients.jedis.params.SetParams;
 
 import java.io.IOException;
 import java.net.URI;
@@ -102,6 +101,11 @@ public class RedisBroker implements Broker {
         try (Jedis jedis = jedisPool.getResource()) {
             return jedis.lpop(key);
         }
+    }
+
+    @Override
+    public void removeFromList(String key, String value) {
+
     }
 
     @Override

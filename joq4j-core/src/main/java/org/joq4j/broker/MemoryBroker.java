@@ -75,6 +75,14 @@ public class MemoryBroker implements Broker {
     }
 
     @Override
+    public void removeFromList(String key, String value) {
+        try {
+            listMap.get(key).remove(value);
+        } catch (NullPointerException | IndexOutOfBoundsException ignored) {
+        }
+    }
+
+    @Override
     public List<String> getList(String key) {
         return listMap.get(key);
     }

@@ -12,12 +12,6 @@ import java.util.TreeMap;
 @SuppressWarnings("unchecked")
 public class Maps {
 
-    public static <K, V> V getAndRemove(Map<K, ?> map, K key) {
-        Object value = map.get(key);
-        map.remove(key);
-        return (V) value;
-    }
-
     /**
      * Lấy giá trị từ Map theo một key và ép về kiểu mong muốn hoặc null nếu
      * không có giá trị tương ứng với key

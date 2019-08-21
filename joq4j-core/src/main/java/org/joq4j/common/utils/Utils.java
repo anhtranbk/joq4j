@@ -48,39 +48,6 @@ public class Utils {
         }
     }
 
-    @Deprecated
-    public static void sleepIgnoredException(long millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Deprecated
-    public static ExecutorService newCachedThreadPool(int coreSize, int maxSize, int queueSize) {
-        return new ThreadPoolExecutor(coreSize,
-                maxSize,
-                60L,
-                TimeUnit.SECONDS,
-                new ArrayBlockingQueue<>(queueSize));
-    }
-
-    @Deprecated
-    public static void stopExecutor(ExecutorService executor) {
-        executor.shutdown();
-    }
-
-    @Deprecated
-    public static void stopExecutor(ExecutorService executor, long timeout, TimeUnit unit) {
-        try {
-            executor.awaitTermination(timeout, unit);
-            executor.shutdown();
-        } catch (InterruptedException e) {
-            e.printStackTrace(System.out);
-        }
-    }
-
     public static void systemExit(String message) {
         System.out.println(message);
         System.exit(0);

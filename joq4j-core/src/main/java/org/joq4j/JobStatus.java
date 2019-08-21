@@ -11,12 +11,13 @@ public enum JobStatus implements Serializable {
     STARTED("started"),
     SUCCESS("success"),
     FAILURE("failure"),
-    CANCELLED("cancelled");
+    CANCELLED("cancelled"),
+    DELETED("deleted");
 
     @Getter
     private String name;
 
     JobStatus(String name) {
-        this.name = name;
+        this.name = name.toUpperCase();
     }
 }

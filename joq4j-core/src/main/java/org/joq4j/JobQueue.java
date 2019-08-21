@@ -31,11 +31,9 @@ public interface JobQueue {
 
     Job nextJob(String worker);
 
-    Job cleanJob(String jobId);
+    Job removeJob(String jobId);
 
     void clear();
-
-    void delete(boolean deleteJobsFirst);
 
     @Accessors(fluent = true)
     @Setter

@@ -14,7 +14,7 @@ public @Data class JobOptions {
     /**
      * Additional description to enqueued jobs.
      */
-    private String description;
+    private String description = "";
     /**
      * Specifies the maximum runtime of the job before it’s interrupted and marked
      * as failed. Its default unit is second and it can be a string representing an

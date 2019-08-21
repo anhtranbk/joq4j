@@ -26,23 +26,24 @@ public class JobImpl implements Job {
     private static final Logger LOGGER = LoggerFactory.getLogger(JobImpl.class);
     private static final String JOB_KEY_PREFIX = "jq:job:";
 
-    private static final String FIELD_STATUS = "status";
-    private static final String FIELD_QUEUED_AT = "queued_at";
-    private static final String FIELD_STARTED_AT = "started_at";
-    private static final String FIELD_FINISHED_AT = "finished_at";
-    private static final String FIELD_RESULT = "result";
-    private static final String FIELD_ERROR = "error";
+    static final String FIELD_STATUS = "status";
+    static final String FIELD_QUEUED_AT = "queued_at";
+    static final String FIELD_STARTED_AT = "started_at";
+    static final String FIELD_FINISHED_AT = "finished_at";
+    static final String FIELD_RESULT = "result";
+    static final String FIELD_ERROR = "error";
 
-    private static final String FIELD_TASK = "task";
-    private static final String FIELD_WORKER_ID = "worker";
+    static final String FIELD_TASK = "task";
+    static final String FIELD_WORKER_ID = "worker";
 
-    private static final String FIELD_DESCRIPTION = "description";
-    private static final String FIELD_TIMEOUT = "timeout";
-    private static final String FIELD_TTL = "ttl";
-    private static final String FIELD_RESULT_TTL = "result_ttl";
-    private static final String FIELD_FAILURE_TTL = "fail_ttl";
+    static final String FIELD_DESCRIPTION = "description";
+    static final String FIELD_TIMEOUT = "timeout";
+    static final String FIELD_TTL = "ttl";
+    static final String FIELD_RESULT_TTL = "result_ttl";
+    static final String FIELD_FAILURE_TTL = "fail_ttl";
 
     private final String jobId;
+    private final String jobKey;
     private AsyncTask task;
 
     private final JobOptions options;
@@ -51,12 +52,13 @@ public class JobImpl implements Job {
     private final Serializer serializer;
     private final Deserializer deserializer;
 
+    JobImpl(JobQueue queue, JobOptions options) {
+        this(queue, null, options);
+    }
+
     JobImpl(JobQueue queue, AsyncTask task, JobOptions options) {
         this.task = task;
         this.options = options;
-        if (this.options.getDescription() == null) {
-            this.options.setDescription(task.toString());
-        }
 
         if (!(queue instanceof JobQueueImpl)) {
             throw new IllegalArgumentException(
@@ -72,18 +74,14 @@ public class JobImpl implements Job {
             if (jobId.length() < 4 || jobId.length() > 128) {
                 throw new IllegalArgumentException("Job ID length must be between 4 to 128 characters");
             }
-            if (this.queue.isExists(jobId)) {
-                throw new IllegalStateException("Job ID " + jobId + " already exists in queue");
-            }
             this.jobId = jobId;
         } else {
             this.jobId = generateId();
         }
+        this.jobKey = generateJobKey(this.jobId);
         LOGGER.debug("New job has created: " + this.jobId);
-        System.out.println("New job " + this.jobId);
     }
 
-    @Override
     public boolean cancel() {
         throw new UnsupportedOperationException();
     }
@@ -102,8 +100,8 @@ public class JobImpl implements Job {
     public JobStatus getStatus() {
         try {
             String status = getField(FIELD_STATUS);
-            return JobStatus.valueOf(status.toUpperCase());
-        } catch (Exception ignored) {
+            return JobStatus.valueOf(status);
+        } catch (IllegalArgumentException | NullPointerException ignored) {
             return JobStatus.UNKNOWN;
         }
     }
@@ -167,15 +165,17 @@ public class JobImpl implements Job {
     }
 
     public void restoreFromBroker() {
-        Map<String, String> fieldMap = getBatchFields();
-        options.setDescription(fieldMap.get(FIELD_DESCRIPTION));
-        options.setJobTimeout(Long.parseLong(fieldMap.get(FIELD_TIMEOUT)));
-        options.setTtl(Long.parseLong(fieldMap.get(FIELD_TTL)));
-        options.setResultTtl(Long.parseLong(fieldMap.get(FIELD_RESULT_TTL)));
-        options.setFailureTtl(Long.parseLong(fieldMap.get(FIELD_FAILURE_TTL)));
+        try {
+            Map<String, String> fieldMap = getBatchFields();
+            options.setDescription(fieldMap.get(FIELD_DESCRIPTION));
+            options.setJobTimeout(Long.parseLong(fieldMap.get(FIELD_TIMEOUT)));
+            options.setTtl(Long.parseLong(fieldMap.get(FIELD_TTL)));
+            options.setResultTtl(Long.parseLong(fieldMap.get(FIELD_RESULT_TTL)));
+            options.setFailureTtl(Long.parseLong(fieldMap.get(FIELD_FAILURE_TTL)));
 
-        String serialized = fieldMap.get(FIELD_TASK);
-        task = (AsyncTask) new JavaSerdeFactory().createDeserializer().deserializeFromBase64(serialized);
+            String serialized = fieldMap.get(FIELD_TASK);
+            task = (AsyncTask) new JavaSerdeFactory().createDeserializer().deserializeFromBase64(serialized);
+        } catch (NumberFormatException ignored) {}
     }
 
     public void setStatus(JobStatus status) {
@@ -223,27 +223,52 @@ public class JobImpl implements Job {
         throw new TimeoutException();
     }
 
-    public String generateId() {
+    public void delete() {
+        broker.removeMap(jobKey);
+        setStatus(JobStatus.DELETED);
+    }
+
+    private String generateId() {
         return UUID.randomUUID().toString();
     }
 
-    public static String generateJobKey(String jobId) {
-        return JOB_KEY_PREFIX + jobId;
-    }
-
     private String getField(String field) {
-        return broker.getFromMap(generateJobKey(this.jobId), field);
+        return broker.getFromMap(jobKey, field);
     }
 
     private void setField(String field, String value) {
-        broker.putToMap(generateJobKey(this.jobId), field, value);
+        broker.putToMap(jobKey, field, value);
     }
 
     private Map<String, String> getBatchFields() {
-        return broker.getMap(generateJobKey(this.jobId));
+        return broker.getMap(jobKey);
     }
 
     private void setBatchFields(Map<String, String> fieldMap) {
-        broker.putMap(generateJobKey(this.jobId), fieldMap);
+        broker.putMap(jobKey, fieldMap);
+    }
+
+    static String generateJobKey(String jobId) {
+        return JOB_KEY_PREFIX + jobId;
+    }
+
+    static JobImpl fetch(JobQueueImpl queue, String jobId) {
+        JobImpl job = new JobImpl(queue, new JobOptions().setJobId(jobId));
+        job.restoreFromBroker();
+        return job;
+    }
+
+    static boolean checkExists(JobQueueImpl queue, String jobId) {
+        String status = queue.getBroker().getFromMap(generateJobKey(jobId), FIELD_STATUS);
+        return status != null && JobStatus.valueOf(status) != JobStatus.UNKNOWN;
+    }
+
+    static boolean checkAlive(JobQueueImpl queue, String jobId) {
+        String status = queue.getBroker().getFromMap(generateJobKey(jobId), FIELD_STATUS);
+        if (status != null) {
+            JobStatus jobStatus = JobStatus.valueOf(status);
+            return jobStatus != JobStatus.UNKNOWN && jobStatus != JobStatus.DELETED;
+        }
+        return false;
     }
 }

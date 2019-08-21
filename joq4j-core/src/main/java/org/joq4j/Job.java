@@ -4,8 +4,6 @@ import java.util.Date;
 
 public interface Job {
 
-    boolean cancel();
-
     String getId();
 
     JobOptions getOptions();
@@ -48,4 +46,8 @@ public interface Job {
     default boolean isFailure() {
         return this.getStatus() == JobStatus.FAILURE;
     }
+
+    default boolean isDeleted() { return this.getStatus() == JobStatus.DELETED; }
+
+    default boolean isExists() { return this.getStatus() != JobStatus.UNKNOWN; }
 }

@@ -1,7 +1,8 @@
 package org.joq4j.broker;
 
 import org.joq4j.Broker;
-import org.joq4j.internal.Subscriber;
+import org.joq4j.backend.StorageBackend;
+import org.joq4j.core.Subscriber;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPubSub;
@@ -12,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RedisBroker implements Broker {
+public class RedisBroker implements Broker, StorageBackend {
 
     private static final int DEFAULT_PORT = 6379;
 

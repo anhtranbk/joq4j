@@ -2,10 +2,14 @@ package org.joq4j;
 
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.joq4j.backend.NullBackend;
+import org.joq4j.backend.StorageBackend;
 import org.joq4j.broker.MemoryBroker;
-import org.joq4j.internal.JobQueueImpl;
-import org.joq4j.serde.JavaSerdeFactory;
-import org.joq4j.serde.SerdeFactory;
+import org.joq4j.core.JobQueueImpl;
+import org.joq4j.encoding.Encoder;
+import org.joq4j.encoding.JavaSerializer;
+import org.joq4j.encoding.JsonEncoder;
+import org.joq4j.encoding.Serializer;
 
 import java.util.List;
 
@@ -17,21 +21,15 @@ public interface JobQueue {
 
     List<Job> getAllJobs();
 
-    boolean isExists(String jobId);
-
-    Job restoreJob(String jobId);
-
     int getTotalJob();
 
     boolean isEmpty();
 
-    AsyncResult enqueue(AsyncTask task);
+    AsyncResult enqueue(Task task);
 
-    AsyncResult enqueue(AsyncTask task, JobOptions options);
+    AsyncResult enqueue(Task task, JobOptions options);
 
     Job nextJob(String worker);
-
-    Job removeJob(String jobId);
 
     void clear();
 
@@ -39,13 +37,16 @@ public interface JobQueue {
     @Setter
     class Builder {
         private String name = "default";
-        private SerdeFactory serializationFactory = new JavaSerdeFactory();
+        private Encoder jobEncoder = new JsonEncoder();
+        private Serializer serializer = new JavaSerializer();
         private long defaultTimeout = 600L;
-        private boolean async = true;
         private Broker broker = new MemoryBroker();
+        private StorageBackend backend = new NullBackend();
 
         public JobQueue build() {
-            return new JobQueueImpl(name, broker, serializationFactory, defaultTimeout, async);
+            return new JobQueueImpl(
+                    name, broker, backend,
+                    jobEncoder, serializer, defaultTimeout);
         }
     }
 

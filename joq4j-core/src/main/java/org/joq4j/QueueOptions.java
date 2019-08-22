@@ -2,8 +2,7 @@ package org.joq4j;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import org.joq4j.serde.Deserializer;
-import org.joq4j.serde.Serializer;
+import org.joq4j.encoding.Encoder;
 
 @Accessors(chain = true)
 public @Data class QueueOptions {
@@ -14,7 +13,5 @@ public @Data class QueueOptions {
 
     private boolean async;
 
-    private Serializer serializer;
-
-    private Deserializer deserializer;
+    private Encoder encoder;
 }

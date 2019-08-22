@@ -1,7 +1,8 @@
 package org.joq4j.broker;
 
 import org.joq4j.Broker;
-import org.joq4j.internal.Subscriber;
+import org.joq4j.backend.StorageBackend;
+import org.joq4j.core.Subscriber;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.Map;
 /**
  * Only for testing, do not use this broker for production !
  */
-public class MemoryBroker implements Broker {
+public class MemoryBroker implements Broker, StorageBackend {
 
     private Map<String, List<String>> listMap = new HashMap<>();
     private Map<String, Map<String, String>> mapMap = new HashMap<>();

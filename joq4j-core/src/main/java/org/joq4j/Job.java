@@ -1,7 +1,5 @@
 package org.joq4j;
 
-import java.util.Date;
-
 public interface Job {
 
     String getId();
@@ -10,15 +8,19 @@ public interface Job {
 
     JobStatus getStatus();
 
+    JobStateMeta getStateMeta();
+
+    void updateState(JobStatus status);
+
+    void updateState(JobStatus status, JobStateMeta meta);
+
+    String getQueueName();
+
     String getOrigin();
 
-    Date getEnqueuedAt();
+    String getWorker();
 
-    Date getStartedAt();
-
-    Date getFinishedAt();
-
-    String getWorkerId();
+    void perform();
 
     Throwable getError() throws IllegalStateException;
 
@@ -46,8 +48,4 @@ public interface Job {
     default boolean isFailure() {
         return this.getStatus() == JobStatus.FAILURE;
     }
-
-    default boolean isDeleted() { return this.getStatus() == JobStatus.DELETED; }
-
-    default boolean isExists() { return this.getStatus() != JobStatus.UNKNOWN; }
 }

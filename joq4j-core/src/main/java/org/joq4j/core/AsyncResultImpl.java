@@ -1,4 +1,4 @@
-package org.joq4j.internal;
+package org.joq4j.core;
 
 import org.joq4j.AsyncResult;
 import org.joq4j.JobCallback;

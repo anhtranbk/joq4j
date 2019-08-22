@@ -11,8 +11,7 @@ public enum JobStatus implements Serializable {
     STARTED("started"),
     SUCCESS("success"),
     FAILURE("failure"),
-    CANCELLED("cancelled"),
-    DELETED("deleted");
+    CANCELLED("cancelled");
 
     @Getter
     private String name;

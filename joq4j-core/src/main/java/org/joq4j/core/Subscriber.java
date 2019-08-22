@@ -1,4 +1,4 @@
-package org.joq4j.internal;
+package org.joq4j.core;
 
 /**
  * TODO: Class description here.

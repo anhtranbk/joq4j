@@ -2,14 +2,17 @@ package org.joq4j;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import lombok.experimental.Wither;
+
+import javax.print.attribute.standard.JobPriority;
 
 @Accessors(chain = true)
 public @Data class JobOptions {
 
     /**
-     * Custom jobId, if not specified, an unique random ID will be generated
+     * Custom job name, default is empty
      */
-    private String jobId;
+    private String name = "";
 
     /**
      * Additional description to enqueued jobs.
@@ -36,6 +39,4 @@ public @Data class JobOptions {
      * specify a value of -1 you indicate an infinite job ttl and it will run indefinitely
      */
     private long ttl = -1;
-
-    private JobPriority jobPriority;
 }

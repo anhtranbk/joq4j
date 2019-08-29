@@ -1,6 +1,5 @@
 package org.joq4j;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public interface Job {
@@ -14,6 +13,7 @@ public interface Job {
     String FIELD_DATA = "data";
     String FIELD_WORKER = "worker";
 
+    String FIELD_ID = "id";
     String FIELD_NAME = "name";
     String FIELD_DESCRIPTION = "desc";
     String FIELD_TIMEOUT = "timeout";

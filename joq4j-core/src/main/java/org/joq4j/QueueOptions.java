@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.joq4j.encoding.Encoder;
 
-@Deprecated
 @Accessors(chain = true)
 public @Data class QueueOptions {
 

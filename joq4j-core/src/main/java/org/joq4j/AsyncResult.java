@@ -6,6 +6,8 @@ import java.util.concurrent.TimeUnit;
 
 public interface AsyncResult extends Future<Object> {
 
+    String getJobId();
+
     Object get();
 
     Object get(long l, TimeUnit timeUnit);

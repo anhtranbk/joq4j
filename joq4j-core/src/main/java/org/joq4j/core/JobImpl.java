@@ -5,7 +5,6 @@ import org.joq4j.JobExecutionException;
 import org.joq4j.JobOptions;
 import org.joq4j.JobQueue;
 import org.joq4j.Task;
-import org.joq4j.common.utils.StringMap;
 import org.joq4j.encoding.Serializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,11 +17,11 @@ public class JobImpl implements Job {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JobImpl.class);
 
-    private final String jobId;
     private final JobOptions options;
     private final JobQueueImpl queue;
     private final Serializer serializer;
 
+    private String jobId;
     private String worker = "";
     private Task task;
 
@@ -81,6 +80,7 @@ public class JobImpl implements Job {
 
         fieldMap.put(FIELD_DATA, serializer.writeAsBase64(task, Task.class));
         fieldMap.put(FIELD_WORKER, worker);
+        fieldMap.put(FIELD_ID, getId());
         return fieldMap;
     }
 
@@ -95,6 +95,7 @@ public class JobImpl implements Job {
 
         task = serializer.readFromBase64(fieldMap.get(FIELD_DATA), Task.class);
         worker = fieldMap.get(FIELD_WORKER);
+        jobId = fieldMap.get(FIELD_ID);
     }
 
     @Override

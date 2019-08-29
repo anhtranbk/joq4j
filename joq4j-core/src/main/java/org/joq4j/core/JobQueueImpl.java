@@ -51,7 +51,7 @@ public class JobQueueImpl implements JobQueue {
     public List<String> getAllJobIds() {
         List<Job> jobs = getAllJobs();
         List<String> jobIds = new ArrayList<>(jobs.size());
-        for (Job job: jobs) {
+        for (Job job : jobs) {
             jobIds.add(job.getId());
         }
         return jobIds;
@@ -60,7 +60,7 @@ public class JobQueueImpl implements JobQueue {
     @Override
     public List<Job> getAllJobs() {
         List<String> encodedList = broker.getList(queueKey);
-        if (encodedList.isEmpty()) return Collections.emptyList();
+        if (encodedList == null || encodedList.isEmpty()) return Collections.emptyList();
 
         List<Job> jobs = new ArrayList<>(encodedList.size());
         for (String encoded : encodedList) {

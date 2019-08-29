@@ -52,6 +52,11 @@ public class AsyncResultImpl implements AsyncResult {
     }
 
     @Override
+    public String getJobId() {
+        return job.getId();
+    }
+
+    @Override
     public void addCallback(JobCallback callback) {
         addCallback(callback, ForkJoinPool.commonPool());
     }

@@ -1,57 +1,55 @@
 package org.joq4j.backend;
 
+import org.joq4j.Job;
+import org.joq4j.JobExecutionException;
+import org.joq4j.JobStatus;
+
 import java.io.IOException;
 import java.util.Map;
 
 public class NullBackend implements StorageBackend {
 
     @Override
-    public String get(String key) {
+    public void storeJob(Job job) {
+    }
+
+    @Override
+    public JobStatus getStatus(String jobId) {
         return null;
     }
 
     @Override
-    public void set(String key, String value) {
-
+    public void updateStatus(String jobId, JobStatus status) {
     }
 
     @Override
-    public String remove(String key) {
+    public Map<String, String> getMeta(String jobId) {
         return null;
     }
 
     @Override
-    public void putMap(String key, Map<String, String> fieldMap) {
-
+    public void updateMeta(String jobId, Map<String, String> meta) {
     }
 
     @Override
-    public void putToMap(String key, String field, String value) {
-
+    public void markAsSuccess(String jobId, Object result) {
     }
 
     @Override
-    public String getFromMap(String key, String field) {
+    public void markAsFailure(String jobId, Throwable error) {
+    }
+
+    @Override
+    public JobExecutionException getError(String jobId) {
         return null;
     }
 
     @Override
-    public Map<String, String> getMap(String key) {
-        return null;
-    }
-
-    @Override
-    public String removeFromMap(String key, String field) {
-        return null;
-    }
-
-    @Override
-    public Map<String, String> removeMap(String key) {
+    public Object getResult(String jobId) {
         return null;
     }
 
     @Override
     public void close() throws IOException {
-
     }
 }

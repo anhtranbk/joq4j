@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -44,7 +45,7 @@ public class Utils {
         } else if (o instanceof Collection) {
             return ((Collection) o).isEmpty();
         } else {
-            return o instanceof Map ? ((Map) o).isEmpty() : false;
+            return o instanceof Map && ((Map) o).isEmpty();
         }
     }
 
@@ -88,6 +89,19 @@ public class Utils {
             return InetAddress.getLocalHost().getHostName();
         } catch (UnknownHostException e) {
             return "Unknown";
+        }
+    }
+
+    /**
+     * Load properties and update into JVM system properties
+     *
+     * @param props object contains properties to load
+     * @param propertyKeys property keys that will be updated
+     */
+    public static void setSystemPropertiesFromConfig(Properties props, String... propertyKeys) {
+        for (String key : propertyKeys) {
+            if (System.getProperty(key) != null) continue;
+            System.setProperty(key, props.getProperty(key));
         }
     }
 }

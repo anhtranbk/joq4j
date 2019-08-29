@@ -1,4 +1,4 @@
-package org.joq4j.core;
+package org.joq4j.broker;
 
 /**
  * TODO: Class description here.

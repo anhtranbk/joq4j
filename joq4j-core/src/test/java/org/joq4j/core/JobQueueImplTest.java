@@ -5,7 +5,6 @@ import org.joq4j.Broker;
 import org.joq4j.Job;
 import org.joq4j.JobOptions;
 import org.joq4j.JobQueue;
-import org.joq4j.JobStatus;
 import org.joq4j.broker.MemoryBroker;
 import org.joq4j.common.utils.Utils;
 import org.joq4j.encoding.JavaSerializer;
@@ -17,7 +16,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class JobQueueImplTest {
@@ -125,7 +123,6 @@ public class JobQueueImplTest {
                     .setDescription("job_description_" + i));
 
             Job job = queue.nextJob("test");
-            assertEquals(JobStatus.QUEUED, job.getStatus());
             assertEquals(job.getId(), Utils.lastItem(queue.getAllJobIds()));
         }
     }

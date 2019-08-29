@@ -2,7 +2,6 @@ package org.joq4j.broker;
 
 import org.joq4j.Broker;
 import org.joq4j.backend.StorageBackend;
-import org.joq4j.core.Subscriber;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,11 +13,9 @@ import java.util.Map;
 /**
  * Only for testing, do not use this broker for production !
  */
-public class MemoryBroker implements Broker, StorageBackend {
+public class MemoryBroker implements Broker {
 
     private Map<String, List<String>> listMap = new HashMap<>();
-    private Map<String, Map<String, String>> mapMap = new HashMap<>();
-    private Map<String, String> map = new HashMap<>();
     private Map<String, List<Subscriber>> subscriberMap = new HashMap<>();
 
     @Override
@@ -42,21 +39,6 @@ public class MemoryBroker implements Broker, StorageBackend {
         for (Subscriber subscriber : subscriberMap.get(channel)) {
             subscriber.onMessage(channel, message);
         }
-    }
-
-    @Override
-    public String get(String key) {
-        return map.get(key);
-    }
-
-    @Override
-    public void set(String key, String value) {
-        map.put(key, value);
-    }
-
-    @Override
-    public String remove(String key) {
-        return map.remove(key);
     }
 
     @Override
@@ -91,36 +73,6 @@ public class MemoryBroker implements Broker, StorageBackend {
     @Override
     public List<String> removeList(String key) {
         return listMap.remove(key);
-    }
-
-    @Override
-    public void putMap(String key, Map<String, String> fieldMap) {
-        mapMap.put(key, fieldMap);
-    }
-
-    @Override
-    public void putToMap(String key, String field, String value) {
-        mapMap.computeIfAbsent(key, k -> new HashMap<>()).put(field, value);
-    }
-
-    @Override
-    public String getFromMap(String key, String field) {
-        return mapMap.computeIfAbsent(key, k -> new HashMap<>()).get(field);
-    }
-
-    @Override
-    public Map<String, String> getMap(String key) {
-        return mapMap.get(key);
-    }
-
-    @Override
-    public String removeFromMap(String key, String field) {
-        return mapMap.computeIfAbsent(key, k -> new HashMap<>()).remove(field);
-    }
-
-    @Override
-    public Map<String, String> removeMap(String key) {
-        return mapMap.remove(key);
     }
 
     @Override

@@ -1,51 +1,37 @@
 package org.joq4j;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public interface Job {
+
+    String FIELD_STATUS = "status";
+    String FIELD_RESULT = "result";
+    String FIELD_ERROR = "error";
+    String FIELD_QUEUED_AT = "queued_at";
+    String FIELD_STARTED_AT = "started_at";
+    String FIELD_FINISHED_AT = "finished_at";
+    String FIELD_DATA = "data";
+    String FIELD_WORKER = "worker";
+
+    String FIELD_NAME = "name";
+    String FIELD_DESCRIPTION = "desc";
+    String FIELD_TIMEOUT = "timeout";
+    String FIELD_MAX_RETRIES = "max_retries";
+    String FIELD_RETRY_DELAY = "retry_delay";
+    String FIELD_PRIORITY = "priority";
 
     String getId();
 
     JobOptions getOptions();
 
-    JobStatus getStatus();
-
-    JobStateMeta getStateMeta();
-
-    void updateState(JobStatus status);
-
-    void updateState(JobStatus status, JobStateMeta meta);
-
     String getQueueName();
-
-    String getOrigin();
 
     String getWorker();
 
-    void perform();
+    Map<String, String> dumps();
 
-    Throwable getError() throws IllegalStateException;
+    void loads(Map<String, String> fieldMap);
 
-    Object getResult() throws IllegalStateException;
-
-    default boolean isStarted() {
-        return this.getStatus() == JobStatus.STARTED;
-    }
-
-    default boolean isDone() {
-        JobStatus status = this.getStatus();
-        return status == JobStatus.SUCCESS
-                || status == JobStatus.FAILURE
-                || status == JobStatus.CANCELLED;
-    }
-
-    default boolean isCancelled() {
-        return this.getStatus() == JobStatus.CANCELLED;
-    }
-
-    default boolean isSuccess() {
-        return this.getStatus() == JobStatus.SUCCESS;
-    }
-
-    default boolean isFailure() {
-        return this.getStatus() == JobStatus.FAILURE;
-    }
+    Object perform();
 }

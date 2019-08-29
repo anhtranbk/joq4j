@@ -1,10 +1,9 @@
 package org.joq4j;
 
-import org.joq4j.core.Subscriber;
+import org.joq4j.broker.Subscriber;
 
 import java.io.Closeable;
 import java.util.List;
-import java.util.Map;
 
 public interface Broker extends Closeable {
 

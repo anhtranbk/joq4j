@@ -2,6 +2,7 @@ package org.joq4j.core;
 
 import lombok.Getter;
 import org.joq4j.AsyncResult;
+import org.joq4j.JobStatus;
 import org.joq4j.Task;
 import org.joq4j.Broker;
 import org.joq4j.Job;
@@ -15,7 +16,6 @@ import org.joq4j.encoding.Serializer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 public class JobQueueImpl implements JobQueue {
@@ -89,9 +89,9 @@ public class JobQueueImpl implements JobQueue {
     @Override
     public AsyncResult enqueue(Task task, JobOptions options) {
         JobImpl job = new JobImpl(this, task, options);
-        JobFieldMap fieldMap = job.dumps();
-        broker.appendToList(queueKey, jobEncoder.writeAsBase64(fieldMap));
-        return new AsyncResultImpl(job);
+        broker.appendToList(queueKey, jobEncoder.writeAsBase64(job.dumps()));
+        backend.updateStatus(job.getId(), JobStatus.QUEUED);
+        return new AsyncResultImpl(backend, job);
     }
 
     @Override
@@ -107,8 +107,7 @@ public class JobQueueImpl implements JobQueue {
 
     private Job restoreJob(String encoded) {
         JobImpl job = new JobImpl(this);
-        JobFieldMap fieldMap = jobEncoder.readFromBase64(encoded);
-        job.loads(fieldMap);
+        job.loads(jobEncoder.readFromBase64(encoded));
         return job;
     }
 }

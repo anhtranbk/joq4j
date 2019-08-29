@@ -37,7 +37,7 @@ public interface Configurable {
                     } catch (ParseException ignored) {}
                     field.set(this, config.getDateTime(name, configKey.datetimeFormat(), defDate));
                 } else if (type.isAssignableFrom(List.class)) {
-                    field.set(this, config.getList(name, configKey.listDelimiter()));
+                    field.set(this, config.getList(name));
                 } else {
                     field.set(this, config.getString(name, defVal));
                 }

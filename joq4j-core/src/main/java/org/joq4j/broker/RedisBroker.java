@@ -1,8 +1,10 @@
 package org.joq4j.broker;
 
 import org.joq4j.Broker;
+import org.joq4j.JobCallback;
+import org.joq4j.backend.KeyValueBackend;
 import org.joq4j.backend.StorageBackend;
-import org.joq4j.core.Subscriber;
+import org.joq4j.encoding.Serializer;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPubSub;
@@ -12,8 +14,9 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
 
-public class RedisBroker implements Broker, StorageBackend {
+public class RedisBroker implements Broker, KeyValueBackend {
 
     private static final int DEFAULT_PORT = 6379;
 
@@ -64,29 +67,6 @@ public class RedisBroker implements Broker, StorageBackend {
     public void publish(String channel, String data) {
         try (Jedis jedis = jedisPool.getResource()) {
             jedis.publish(channel, data);
-        }
-    }
-
-    @Override
-    public String get(String key) {
-        try (Jedis jedis = jedisPool.getResource()) {
-            return jedis.get(key);
-        }
-    }
-
-    @Override
-    public void set(String key, String value) {
-        try (Jedis jedis = jedisPool.getResource()) {
-            jedis.set(key, value);
-        }
-    }
-
-    @Override
-    public String remove(String key) {
-        try (Jedis jedis = jedisPool.getResource()) {
-            String val = jedis.get(key);
-            jedis.del(key);
-            return val;
         }
     }
 

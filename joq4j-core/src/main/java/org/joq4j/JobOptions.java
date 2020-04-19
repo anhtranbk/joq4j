@@ -2,7 +2,7 @@ package org.joq4j;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import org.joq4j.config.ConfigKey;
+import org.joq4j.config.ConfigDescriptor;
 import org.joq4j.config.Configurable;
 
 import java.util.concurrent.TimeUnit;
@@ -32,13 +32,13 @@ public @Data class JobOptions implements Configurable {
 
     private int priority = 1;
 
-    @ConfigKey("joq4j.worker.storeResult")
+    @ConfigDescriptor(name = "joq4j.worker.storeResult")
     private boolean storeResult = true;
 
-    @ConfigKey("joq4j.worker.storeErrorEventIfIgnored")
+    @ConfigDescriptor(name = "joq4j.worker.storeErrorEventIfIgnored")
     private boolean storeErrorEventIfIgnored = true;
 
-    @ConfigKey("joq4j.worker.sentEvents")
+    @ConfigDescriptor(name = "joq4j.worker.sentEvents")
     private boolean sentEvents = false;
 
     public JobOptions setJobTimeout(long timeout) {

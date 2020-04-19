@@ -4,17 +4,12 @@ import org.joq4j.AsyncResult;
 import org.joq4j.Broker;
 import org.joq4j.JobQueue;
 import org.joq4j.Task;
-import org.joq4j.broker.RedisBroker;
+import org.joq4j.broker.MemoryBroker;
 
-/**
- * TODO: Class description here.
- *
- * @author <a href="https://github.com/tjeubaoit">tjeubaoit</a>
- */
 public class DemoApp {
 
     public static void main(String[] args) throws Exception {
-        Broker broker = new RedisBroker("localhost");
+        Broker broker = new MemoryBroker();
         JobQueue queue = JobQueue.builder().broker(broker).build();
         Task task = new Task() {
             @Override

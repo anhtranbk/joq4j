@@ -1,6 +1,5 @@
 package org.joq4j.core;
 
-import org.joq4j.AsyncResult;
 import org.joq4j.Job;
 import org.joq4j.JobOptions;
 import org.joq4j.JobQueue;

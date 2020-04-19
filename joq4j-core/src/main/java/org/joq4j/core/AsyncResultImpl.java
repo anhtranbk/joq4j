@@ -3,7 +3,6 @@ package org.joq4j.core;
 import org.joq4j.AsyncResult;
 import org.joq4j.Job;
 import org.joq4j.JobCallback;
-import org.joq4j.JobExecutionException;
 import org.joq4j.JobStatus;
 import org.joq4j.backend.StorageBackend;
 

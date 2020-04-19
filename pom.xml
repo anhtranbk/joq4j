@@ -23,8 +23,6 @@
     <module>joq4j-core</module>
     <module>joq4j-worker</module>
     <module>examples</module>
-    <!--<module>joq4j-broker-rabbitmq</module>-->
-    <!--<module>joq4j-broker-kafka</module>-->
   </modules>
 
   <dependencies>

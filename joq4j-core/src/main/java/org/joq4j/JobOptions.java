@@ -2,8 +2,8 @@ package org.joq4j;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import org.joq4j.common.config.ConfigKey;
-import org.joq4j.common.config.Configurable;
+import org.joq4j.config.ConfigKey;
+import org.joq4j.config.Configurable;
 
 import java.util.concurrent.TimeUnit;
 

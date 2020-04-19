@@ -6,8 +6,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Helper methods for working with DateTime
- *
  * @author <a href="https://github.com/tjeubaoit">tjeubaoit</a>
  */
 public class DateTimes {
@@ -48,18 +46,7 @@ public class DateTimes {
         return calendar.getTime();
     }
 
-    /**
-     * @return current date as string in format yyyy-MM-dd
-     */
-    public static String currentDateAsString() {
-        return currentDateAsString(ISO_FORMAT);
-    }
-
     public static String currentDateTimeAsIsoString() {
-        return currentDateAsString(ISO_FORMAT);
-    }
-
-    public static String currentDateAsString(String format) {
-        return DateTimes.format(new Date(), format);
+        return toIsoFormat(new Date());
     }
 }

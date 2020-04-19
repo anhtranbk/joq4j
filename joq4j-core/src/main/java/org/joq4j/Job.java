@@ -10,7 +10,6 @@ public interface Job {
     String FIELD_QUEUED_AT = "queued_at";
     String FIELD_STARTED_AT = "started_at";
     String FIELD_FINISHED_AT = "finished_at";
-    String FIELD_DATA = "data";
     String FIELD_WORKER = "worker";
 
     String FIELD_ID = "id";
@@ -20,12 +19,15 @@ public interface Job {
     String FIELD_MAX_RETRIES = "max_retries";
     String FIELD_RETRY_DELAY = "retry_delay";
     String FIELD_PRIORITY = "priority";
+    String FIELD_DATA = "data";
 
     String getId();
 
     JobOptions getOptions();
 
     String getQueueName();
+
+    Task getTask();
 
     String getWorker();
 

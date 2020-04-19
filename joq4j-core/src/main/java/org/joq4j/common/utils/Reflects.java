@@ -2,11 +2,6 @@ package org.joq4j.common.utils;
 
 import java.lang.reflect.InvocationTargetException;
 
-/**
- * Các helper method làm việc với Reflections
- *
- * @author <a href="https://github.com/tjeubaoit">tjeubaoit</a>
- */
 @SuppressWarnings("unchecked")
 public class Reflects {
 

@@ -1,5 +1,6 @@
 package org.joq4j.core;
 
+import lombok.Getter;
 import org.joq4j.Job;
 import org.joq4j.JobExecutionException;
 import org.joq4j.JobOptions;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+@Getter
 public class JobImpl implements Job {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JobImpl.class);
@@ -21,7 +23,7 @@ public class JobImpl implements Job {
     private final JobQueueImpl queue;
     private final Serializer serializer;
 
-    private String jobId;
+    private String id;
     private String worker = "";
     private Task task;
 
@@ -44,28 +46,13 @@ public class JobImpl implements Job {
         this.queue = (JobQueueImpl) queue;
         this.serializer = this.queue.getSerializer();
 
-        this.jobId = generateId();
-        LOGGER.debug("New job has created: " + this.jobId);
-    }
-
-    @Override
-    public String getId() {
-        return this.jobId;
-    }
-
-    @Override
-    public JobOptions getOptions() {
-        return this.options;
+        this.id = generateId();
+        LOGGER.debug("New job has created: " + this.id);
     }
 
     @Override
     public String getQueueName() {
         return this.queue.getName();
-    }
-
-    @Override
-    public String getWorker() {
-        return null;
     }
 
     @Override
@@ -95,7 +82,7 @@ public class JobImpl implements Job {
 
         task = serializer.readFromBase64(fieldMap.get(FIELD_DATA), Task.class);
         worker = fieldMap.get(FIELD_WORKER);
-        jobId = fieldMap.get(FIELD_ID);
+        id = fieldMap.get(FIELD_ID);
     }
 
     @Override

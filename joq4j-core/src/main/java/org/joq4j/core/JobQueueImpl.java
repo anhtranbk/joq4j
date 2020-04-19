@@ -2,14 +2,13 @@ package org.joq4j.core;
 
 import lombok.Getter;
 import org.joq4j.AsyncResult;
-import org.joq4j.JobStatus;
-import org.joq4j.Task;
 import org.joq4j.Broker;
 import org.joq4j.Job;
 import org.joq4j.JobOptions;
 import org.joq4j.JobQueue;
+import org.joq4j.JobStatus;
+import org.joq4j.Task;
 import org.joq4j.backend.StorageBackend;
-import org.joq4j.common.utils.Utils;
 import org.joq4j.encoding.Encoder;
 import org.joq4j.encoding.Serializer;
 
@@ -77,7 +76,7 @@ public class JobQueueImpl implements JobQueue {
 
     @Override
     public boolean isEmpty() {
-        return Utils.isEmpty(getAllJobIds());
+        return getAllJobIds().isEmpty();
     }
 
     @Override

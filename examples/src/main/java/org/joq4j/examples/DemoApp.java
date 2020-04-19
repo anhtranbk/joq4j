@@ -1,9 +1,9 @@
 package org.joq4j.examples;
 
 import org.joq4j.AsyncResult;
-import org.joq4j.Task;
 import org.joq4j.Broker;
 import org.joq4j.JobQueue;
+import org.joq4j.Task;
 import org.joq4j.broker.RedisBroker;
 
 /**

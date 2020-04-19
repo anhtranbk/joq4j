@@ -2,13 +2,11 @@ package org.joq4j.core;
 
 import org.joq4j.AsyncResult;
 import org.joq4j.Task;
-import org.joq4j.Broker;
 import org.joq4j.Job;
 import org.joq4j.JobOptions;
 import org.joq4j.JobQueue;
 import org.joq4j.backend.MemoryBackend;
 import org.joq4j.broker.MemoryBroker;
-import org.joq4j.common.utils.Utils;
 import org.joq4j.encoding.JavaSerializer;
 import org.junit.After;
 import org.junit.Before;
@@ -23,33 +21,12 @@ import static org.junit.Assert.assertTrue;
 
 public class JobQueueImplTest {
 
-    private static class SimpleTask implements Task {
-
-        private final int a;
-        private final int b;
-
-        SimpleTask(int a, int b) {
-            this.a = a;
-            this.b = b;
-        }
-
-        @Override
-        public boolean isCancelable() {
-            return false;
-        }
-
-        @Override
-        public Object call() throws Exception {
-            return a + b;
-        }
-    }
-
     private JobQueueImpl queue;
-    private SimpleTask simpleTask;
+    private Task task;
 
     @Before
     public void setUp() throws Exception {
-        simpleTask = new SimpleTask(4, 9);
+        task = Task.doNothing();
         queue = (JobQueueImpl) JobQueue.builder()
                 .name("test")
                 .defaultTimeout(500)
@@ -75,7 +52,7 @@ public class JobQueueImplTest {
         int numJobs = 5;
         List<String> originJobIds = new ArrayList<>(numJobs);
         for (int i = 0; i < numJobs; i++) {
-            AsyncResult ar = queue.enqueue(simpleTask);
+            AsyncResult ar = queue.enqueue(task);
             originJobIds.add(ar.getJobId());
         }
 
@@ -91,7 +68,7 @@ public class JobQueueImplTest {
         int numJobs = 5;
         List<String> jobIds = new ArrayList<>(numJobs);
         for (int i = 0; i < numJobs; i++) {
-            AsyncResult ar = queue.enqueue(simpleTask, new JobOptions()
+            AsyncResult ar = queue.enqueue(task, new JobOptions()
                     .setName("job_" + i)
                     .setDescription("job_description_" + i)
                     .setJobTimeout(100 * i));
@@ -112,7 +89,7 @@ public class JobQueueImplTest {
     public void getTotalJob() {
         int numJobs = 5;
         for (int i = 0; i < numJobs; i++) {
-            queue.enqueue(simpleTask, new JobOptions().setName("job_" + i));
+            queue.enqueue(task, new JobOptions().setName("job_" + i));
         }
         assertEquals(numJobs, queue.getTotalJob());
     }
@@ -120,7 +97,7 @@ public class JobQueueImplTest {
     @Test
     public void isEmpty() {
         assertTrue(queue.isEmpty());
-        queue.enqueue(simpleTask, new JobOptions());
+        queue.enqueue(task, new JobOptions());
         assertFalse(queue.isEmpty());
     }
 
@@ -128,7 +105,7 @@ public class JobQueueImplTest {
     public void enqueue() {
         int numJobs = 5;
         for (int i = 0; i < numJobs; i++) {
-            AsyncResult ar = queue.enqueue(simpleTask, new JobOptions()
+            AsyncResult ar = queue.enqueue(task, new JobOptions()
                     .setName("job_" + i)
                     .setDescription("job_description_" + i));
 
@@ -143,11 +120,11 @@ public class JobQueueImplTest {
     public void nextJob() {
         int numJobs = 5;
         for (int i = 0; i < numJobs; i++) {
-            queue.enqueue(simpleTask, new JobOptions()
+            queue.enqueue(task, new JobOptions()
                     .setName("job_" + i)
                     .setDescription("job_description_" + i));
         }
-        queue.enqueue(simpleTask, new JobOptions().setName("job_test"));
+        queue.enqueue(task, new JobOptions().setName("job_test"));
 
         for (int i = 0; i < numJobs; i++) {
             Job job = queue.nextJob("test");
@@ -163,7 +140,7 @@ public class JobQueueImplTest {
     public void clear() {
         int numJobs = 7;
         for (int i = 0; i < numJobs; i++) {
-            queue.enqueue(simpleTask, new JobOptions()
+            queue.enqueue(task, new JobOptions()
                     .setName("job_" + i)
                     .setDescription("job_description_" + i));
         }

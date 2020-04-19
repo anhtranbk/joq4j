@@ -6,9 +6,14 @@ import org.joq4j.JobStatus;
 import org.joq4j.common.utils.DateTimes;
 import org.joq4j.common.utils.StringMap;
 
-import static org.joq4j.Job.*;
-
 import java.util.Map;
+
+import static org.joq4j.Job.FIELD_ERROR;
+import static org.joq4j.Job.FIELD_FINISHED_AT;
+import static org.joq4j.Job.FIELD_QUEUED_AT;
+import static org.joq4j.Job.FIELD_RESULT;
+import static org.joq4j.Job.FIELD_STARTED_AT;
+import static org.joq4j.Job.FIELD_STATUS;
 
 public interface KeyValueBackend extends StorageBackend {
 

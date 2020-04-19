@@ -1,4 +1,4 @@
-package org.joq4j.common.config;
+package org.joq4j.config;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

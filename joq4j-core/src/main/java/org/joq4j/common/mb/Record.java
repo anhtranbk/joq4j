@@ -1,8 +1,6 @@
 package org.joq4j.common.mb;
 
 /**
- * TODO: Class description here.
- *
  * @author <a href="https://github.com/tjeubaoit">tjeubaoit</a>
  */
 public final class Record {

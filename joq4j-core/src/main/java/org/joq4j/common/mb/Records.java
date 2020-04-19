@@ -7,8 +7,6 @@ import java.util.Spliterator;
 import java.util.function.Consumer;
 
 /**
- * TODO: Class description here.
- *
  * @author <a href="https://github.com/tjeubaoit">tjeubaoit</a>
  */
 public final class Records implements Iterable<Record> {

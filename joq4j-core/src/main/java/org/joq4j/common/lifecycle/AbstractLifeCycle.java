@@ -1,6 +1,6 @@
 package org.joq4j.common.lifecycle;
 
-import org.joq4j.common.utils.Utils;
+import org.joq4j.common.utils.Systems;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +17,7 @@ public abstract class AbstractLifeCycle implements LifeCycle {
     private final AtomicBoolean flagStop = new AtomicBoolean(false);
 
     public AbstractLifeCycle() {
-        Utils.addShutdownHook(AbstractLifeCycle.this::stop);
+        Systems.addShutdownHook(AbstractLifeCycle.this::stop);
     }
 
     /**

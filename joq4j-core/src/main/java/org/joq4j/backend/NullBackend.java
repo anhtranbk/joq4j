@@ -2,33 +2,34 @@ package org.joq4j.backend;
 
 import org.joq4j.Job;
 import org.joq4j.JobExecutionException;
-import org.joq4j.JobStatus;
+import org.joq4j.JobState;
+import org.joq4j.encoding.TaskSerializer;
 
 import java.io.IOException;
-import java.util.Map;
 
 public class NullBackend implements StorageBackend {
+
+    @Override
+    public TaskSerializer getTaskSerializer() {
+        return null;
+    }
 
     @Override
     public void storeJob(Job job) {
     }
 
     @Override
-    public JobStatus getStatus(String jobId) {
+    public Job getJob(String jobId) {
         return null;
     }
 
     @Override
-    public void updateStatus(String jobId, JobStatus status) {
-    }
-
-    @Override
-    public Map<String, String> getMeta(String jobId) {
+    public JobState getState(String jobId) {
         return null;
     }
 
     @Override
-    public void updateMeta(String jobId, Map<String, String> meta) {
+    public void setState(String jobId, JobState status) {
     }
 
     @Override

@@ -7,8 +7,8 @@ import org.joq4j.config.Configurable;
 
 import java.util.concurrent.TimeUnit;
 
-@Accessors(chain = true)
-public @Data class JobOptions implements Configurable {
+@Accessors(chain = true, fluent = true)
+public @Data class TaskOptions implements Configurable {
 
     /**
      * Custom job name, default is empty
@@ -24,7 +24,7 @@ public @Data class JobOptions implements Configurable {
      * Specifies the maximum runtime of the job before it’s interrupted and marked
      * as failed in seconds.
      */
-    private long jobTimeout = 600;
+    private long timeout = 600;
 
     private int maxRetries = 3;
 
@@ -41,11 +41,6 @@ public @Data class JobOptions implements Configurable {
     @ConfigDescriptor(name = "joq4j.worker.sentEvents")
     private boolean sentEvents = false;
 
-    public JobOptions setJobTimeout(long timeout) {
-        this.jobTimeout = timeout;
-        return this;
-    }
-
     /**
      * Specifies the maximum runtime of the job before it’s interrupted and marked
      * as failed. Its default unit is second and it can be a string representing an
@@ -54,21 +49,21 @@ public @Data class JobOptions implements Configurable {
      *
      * @param timeout Job timeout represent in string
      */
-    public JobOptions setJobTimeout(String timeout) {
+    public TaskOptions setTimeout(String timeout) {
         try {
-            jobTimeout = Long.parseLong(timeout);
+            this.timeout = Long.parseLong(timeout);
         } catch (NumberFormatException e) {
             long amount = Long.parseLong(timeout.substring(0, timeout.length() - 1));
             String unit = timeout.substring(timeout.length() - 1);
             switch (unit) {
                 case "s":
-                    jobTimeout = amount;
+                    this.timeout = amount;
                     break;
                 case "m":
-                    jobTimeout = TimeUnit.MINUTES.toSeconds(amount);
+                    this.timeout = TimeUnit.MINUTES.toSeconds(amount);
                     break;
                 case "h":
-                    jobTimeout = TimeUnit.HOURS.toSeconds(amount);
+                    this.timeout = TimeUnit.HOURS.toSeconds(amount);
                     break;
                 default:
                     throw new IllegalArgumentException("Invalid unit time or bad format");

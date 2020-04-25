@@ -1,12 +1,12 @@
 package org.joq4j.core;
 
 import org.joq4j.Job;
-import org.joq4j.JobOptions;
+import org.joq4j.TaskOptions;
 import org.joq4j.JobQueue;
 import org.joq4j.Task;
 import org.joq4j.backend.MemoryBackend;
 import org.joq4j.broker.MemoryBroker;
-import org.joq4j.encoding.JavaSerializer;
+import org.joq4j.encoding.JavaTaskSerializer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,11 +30,6 @@ public class JobImplTest {
         }
 
         @Override
-        public boolean isCancelable() {
-            return false;
-        }
-
-        @Override
         public Object call() throws Exception {
             return a + b;
         }
@@ -49,7 +44,7 @@ public class JobImplTest {
         queue = (JobQueueImpl) JobQueue.builder()
                 .name("test")
                 .defaultTimeout(500)
-                .serializer(new JavaSerializer())
+                .taskSerializer(new JavaTaskSerializer())
                 .broker(new MemoryBroker())
                 .backend(new MemoryBackend())
                 .build();
@@ -65,24 +60,24 @@ public class JobImplTest {
     public void getId() {
         JobImpl job1 = new JobImpl(queue);
         JobImpl job2 = new JobImpl(queue);
-        assertNotEquals(job1.getId(), job2.getId());
-        assertNotNull(UUID.fromString(job1.getId()));
+        assertNotEquals(job1.id(), job2.id());
+        assertNotNull(UUID.fromString(job1.id()));
     }
 
     @Test
     public void getOptions() {
-        JobOptions options = new JobOptions()
-                .setName("test")
-                .setDescription("demo job");
+        TaskOptions options = new TaskOptions()
+                .name("test")
+                .description("demo job");
         JobImpl job = new JobImpl(queue, options);
-        assertEquals(options.getName(), job.getOptions().getName());
-        assertEquals(options.getDescription(), job.getOptions().getDescription());
+        assertEquals(options.name(), job.options().name());
+        assertEquals(options.description(), job.options().description());
     }
 
     @Test
     public void getQueueName() {
         JobImpl job = new JobImpl(queue);
-        assertEquals(queue.getName(), job.getQueueName());
+        assertEquals(queue.getName(), job.queueName());
     }
 
     @Test
@@ -91,41 +86,41 @@ public class JobImplTest {
 
     @Test
     public void dumps() {
-        JobOptions options = new JobOptions()
-                .setName("test")
-                .setDescription("demo job");
+        TaskOptions options = new TaskOptions()
+                .name("test")
+                .description("demo job");
         JobImpl job = new JobImpl(queue, options);
         Map<String, String> map = job.dumps();
 
-        assertEquals(job.getId(), map.get(Job.FIELD_ID));
-        assertEquals(options.getName(), map.get(Job.FIELD_NAME));
-        assertEquals(options.getDescription(), map.get(Job.FIELD_DESCRIPTION));
+        assertEquals(job.id(), map.get(Job.FIELD_ID));
+        assertEquals(options.name(), map.get(Job.FIELD_NAME));
+        assertEquals(options.description(), map.get(Job.FIELD_DESCRIPTION));
         assertEquals(
-                options.getJobTimeout(),
+                options.timeout(),
                 Long.parseLong(map.get(Job.FIELD_TIMEOUT))
         );
         assertEquals(
-                options.getMaxRetries(),
+                options.maxRetries(),
                 Integer.parseInt(map.get(Job.FIELD_MAX_RETRIES))
         );
         assertEquals(
-                options.getRetryDelay(),
+                options.retryDelay(),
                 Long.parseLong(map.get(Job.FIELD_RETRY_DELAY))
         );
         assertEquals(
-                options.getPriority(),
+                options.priority(),
                 Integer.parseInt(map.get(Job.FIELD_PRIORITY))
         );
         assertEquals(
-                queue.getSerializer().writeAsBase64(task, Object.class),
-                map.get(Job.FIELD_DATA)
+                queue.getTaskSerializer().writeAsBase64(task, Object.class),
+                map.get(Job.FIELD_TASK)
         );
     }
 
     @Test
     public void loads() {
         String id = UUID.randomUUID().toString();
-        String data = queue.getSerializer().writeAsBase64(task, Object.class);
+        String data = queue.getTaskSerializer().writeAsBase64(task, Object.class);
 
         Map<String, String> map = new HashMap<>();
         map.put(Job.FIELD_ID, id);
@@ -135,19 +130,19 @@ public class JobImplTest {
         map.put(Job.FIELD_MAX_RETRIES, "5");
         map.put(Job.FIELD_RETRY_DELAY, "100");
         map.put(Job.FIELD_PRIORITY, "2");
-        map.put(Job.FIELD_DATA, data);
+        map.put(Job.FIELD_TASK, data);
 
         JobImpl job = new JobImpl(queue);
         job.loads(map);
 
-        assertEquals(id, job.getId());
-        assertEquals("test", job.getOptions().getName());
-        assertEquals("demo job", job.getOptions().getDescription());
-        assertEquals(500, job.getOptions().getJobTimeout());
-        assertEquals(5, job.getOptions().getMaxRetries());
-        assertEquals(100, job.getOptions().getRetryDelay());
-        assertEquals(2, job.getOptions().getPriority());
-        assertEquals(task, job.getTask());
+        assertEquals(id, job.id());
+        assertEquals("test", job.options().name());
+        assertEquals("demo job", job.options().description());
+        assertEquals(500, job.options().timeout());
+        assertEquals(5, job.options().maxRetries());
+        assertEquals(100, job.options().retryDelay());
+        assertEquals(2, job.options().priority());
+        assertEquals(task, job.task());
     }
 
     @Test

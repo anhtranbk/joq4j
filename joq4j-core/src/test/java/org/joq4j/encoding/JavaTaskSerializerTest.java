@@ -8,7 +8,7 @@ import java.util.Date;
 
 import static org.junit.Assert.*;
 
-public class JavaSerializerTest {
+public class JavaTaskSerializerTest {
 
     static @Data
     class Person implements Serializable {
@@ -44,11 +44,11 @@ public class JavaSerializerTest {
         p.getCompany().setName("VCCorp");
         p.getCompany().setAddress("1 Nguyen Huy Tuong");
 
-        Serializer serializer = new JavaSerializer();
-        String b = serializer.writeAsBase64(p, Object.class);
+        TaskSerializer taskSerializer = new JavaTaskSerializer();
+        String b = taskSerializer.writeAsBase64(p, Object.class);
         System.out.println(b);
 
-        Person p2 = (Person) serializer.readFromBase64(b, Object.class);
+        Person p2 = (Person) taskSerializer.readFromBase64(b, Object.class);
         assertEquals(p, p2);
         assertEquals(p.getCompany(), p2.getCompany());
     }

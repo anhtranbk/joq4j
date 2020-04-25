@@ -6,7 +6,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
 @SuppressWarnings("unchecked")
-public class JavaSerializer implements Serializer {
+public class JavaTaskSerializer implements TaskSerializer {
 
     @Override
     public <T> void write(T input, Class<T> tClass, OutputStream out) {

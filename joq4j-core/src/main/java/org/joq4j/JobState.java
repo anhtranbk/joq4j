@@ -4,7 +4,7 @@ import lombok.Getter;
 
 import java.io.Serializable;
 
-public enum JobStatus implements Serializable {
+public enum JobState implements Serializable {
 
     UNKNOWN("unknown"),
     QUEUED("queued"),
@@ -16,7 +16,7 @@ public enum JobStatus implements Serializable {
     @Getter
     private String name;
 
-    JobStatus(String name) {
+    JobState(String name) {
         this.name = name.toUpperCase();
     }
 }

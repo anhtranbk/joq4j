@@ -5,10 +5,12 @@ import java.util.concurrent.Callable;
 
 public interface Task extends Serializable, Callable<Object> {
 
-    boolean isCancelable();
-
     static Task doNothing() {
         return new DoNothingTask();
+    }
+
+    default boolean isCancelable() {
+        return false;
     }
 
     class DoNothingTask implements Task {

@@ -7,8 +7,6 @@ import java.io.OutputStream;
 import java.util.Base64;
 
 /**
- * TODO: Class description here.
- *
  * @author <a href="https://github.com/tjeubaoit">tjeubaoit</a>
  */
 public interface Encoder {

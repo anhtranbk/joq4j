@@ -1,5 +1,8 @@
 package org.joq4j.backend;
 
+import org.joq4j.Job;
+import org.joq4j.encoding.TaskSerializer;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,5 +43,15 @@ public class MemoryBackend implements KeyValueBackend {
 
     @Override
     public void close() throws IOException {
+    }
+
+    @Override
+    public TaskSerializer getTaskSerializer() {
+        return null;
+    }
+
+    @Override
+    public Job getJob(String jobId) {
+        return null;
     }
 }

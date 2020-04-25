@@ -1,10 +1,5 @@
 package org.joq4j.broker;
 
-/**
- * TODO: Class description here.
- *
- * @author <a href="https://github.com/tjeubaoit">tjeubaoit</a>
- */
 public interface Subscriber {
 
     void onSubscribe(String channel);

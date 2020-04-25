@@ -1,9 +1,10 @@
 package org.joq4j.core;
 
+import org.jetbrains.annotations.NotNull;
 import org.joq4j.AsyncResult;
 import org.joq4j.Job;
 import org.joq4j.JobCallback;
-import org.joq4j.JobStatus;
+import org.joq4j.JobState;
 import org.joq4j.backend.StorageBackend;
 
 import java.util.concurrent.Executor;
@@ -23,7 +24,7 @@ public class AsyncResultImpl implements AsyncResult {
     @Override
     public boolean cancel(boolean b) {
         try {
-            backend.updateStatus(job.getId(), JobStatus.CANCELLED);
+            backend.setState(job.id(), JobState.CANCELLED);
             return true;
         } catch (Exception ignored) {
             return false;
@@ -32,27 +33,27 @@ public class AsyncResultImpl implements AsyncResult {
 
     @Override
     public boolean isCancelled() {
-        return backend.getStatus(job.getId()).equals(JobStatus.CANCELLED);
+        return backend.getState(job.id()).equals(JobState.CANCELLED);
     }
 
     @Override
     public boolean isDone() {
-        return backend.isJobDone(job.getId());
+        return backend.isJobDone(job.id());
     }
 
     @Override
     public Object get() {
-        return backend.waitForJobResult(job.getId(), 0L);
+        return backend.waitForJobResult(job.id(), 0L);
     }
 
     @Override
-    public Object get(long l, TimeUnit timeUnit) {
-        return backend.waitForJobResult(job.getId(), timeUnit.toMillis(l));
+    public Object get(long l, @NotNull TimeUnit timeUnit) {
+        return backend.waitForJobResult(job.id(), timeUnit.toMillis(l));
     }
 
     @Override
     public String getJobId() {
-        return job.getId();
+        return job.id();
     }
 
     @Override

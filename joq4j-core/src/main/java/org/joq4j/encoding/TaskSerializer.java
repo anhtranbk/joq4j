@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Base64;
 
-public interface Serializer {
+public interface TaskSerializer {
 
     <T> void write(T input, Class<T> tClass, OutputStream out);
 

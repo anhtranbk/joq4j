@@ -1,18 +1,11 @@
 package org.joq4j.broker;
 
-import org.joq4j.Broker;
-import org.joq4j.backend.StorageBackend;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Only for testing, do not use this broker for production !
- */
 public class MemoryBroker implements Broker {
 
     private Map<String, List<String>> listMap = new HashMap<>();
@@ -42,40 +35,23 @@ public class MemoryBroker implements Broker {
     }
 
     @Override
-    public void appendToList(String key, String... values) {
+    public void push(String queue, String... values) {
         for (String value : values) {
-            listMap.computeIfAbsent(key, k -> new LinkedList<>()).add(value);
+            listMap.computeIfAbsent(queue, k -> new LinkedList<>()).add(value);
         }
     }
 
     @Override
-    public String popFromList(String key) {
+    public String pop(String queue) {
         try {
-            return listMap.get(key).remove(0);
+            return listMap.get(queue).remove(0);
         } catch (NullPointerException | IndexOutOfBoundsException ignored) {
             return null;
         }
     }
 
     @Override
-    public void removeFromList(String key, String value) {
-        try {
-            listMap.get(key).remove(value);
-        } catch (NullPointerException | IndexOutOfBoundsException ignored) {
-        }
-    }
+    public void close() {
 
-    @Override
-    public List<String> getList(String key) {
-        return listMap.get(key);
-    }
-
-    @Override
-    public List<String> removeList(String key) {
-        return listMap.remove(key);
-    }
-
-    @Override
-    public void close() throws IOException {
     }
 }

@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 @SuppressWarnings("unchecked")
-public class JsonEncoder implements Encoder {
+public class JacksonEncoder implements Encoder {
 
     static final ObjectMapper om = new ObjectMapper();
 

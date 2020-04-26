@@ -9,7 +9,6 @@ import org.joq4j.TaskOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
 import java.util.UUID;
 
 @Accessors(fluent = true)
@@ -19,17 +18,9 @@ public class JobImpl implements Job {
     private static final Logger logger = LoggerFactory.getLogger(JobImpl.class);
 
     private String id;
-    private String queueName;
-    private String worker = "";
     private Task task;
     private TaskOptions options;
-
-    private Date enqueuedAt;
-    private Date startedAt;
-    private Date finishedAt;
-
-    private Object result;
-    private Throwable error;
+    private String queueName;
 
     JobImpl(String queueName, Task task) {
         this(queueName, task, new TaskOptions());
@@ -46,10 +37,8 @@ public class JobImpl implements Job {
     @Override
     public Object perform() {
         try {
-            this.result =  task.call();
-            return result;
+            return task.call();
         } catch (Throwable t) {
-            this.error = t;
             throw new JobExecutionException(t);
         }
     }

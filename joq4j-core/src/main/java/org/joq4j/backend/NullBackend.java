@@ -19,11 +19,6 @@ public class NullBackend implements StorageBackend {
     }
 
     @Override
-    public Job getJob(String jobId) {
-        return null;
-    }
-
-    @Override
     public JobState getState(String jobId) {
         return null;
     }

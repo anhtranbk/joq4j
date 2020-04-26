@@ -45,7 +45,7 @@ public interface KeyValueBackend extends StorageBackend {
         fieldMap.put(FIELD_DESCRIPTION, job.options().description());
         fieldMap.put(FIELD_TASK, job.task().getClass().getName());
 
-        fieldMap.put(FIELD_WORKER, job.worker());
+        fieldMap.put(FIELD_WORKER, "");
         fieldMap.put(FIELD_RESULT, "");
         fieldMap.put(FIELD_ERROR, "");
 
@@ -54,10 +54,6 @@ public interface KeyValueBackend extends StorageBackend {
         fieldMap.put(FIELD_FINISHED_AT, "");
 
         put(generateJobKey(job.id()), fieldMap);
-    }
-
-    default Job getJob(String jobId) {
-        throw new UnsupportedOperationException();
     }
 
     default JobState getState(String jobId) {

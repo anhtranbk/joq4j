@@ -23,11 +23,5 @@ public interface Job {
 
     Task task();
 
-    String worker();
-
     Object perform();
-
-    Throwable error();
-
-    Object result();
 }

@@ -1,6 +1,5 @@
 package org.joq4j.backend;
 
-import org.joq4j.Job;
 import org.joq4j.encoding.TaskSerializer;
 
 import java.io.IOException;
@@ -47,11 +46,6 @@ public class MemoryBackend implements KeyValueBackend {
 
     @Override
     public TaskSerializer getTaskSerializer() {
-        return null;
-    }
-
-    @Override
-    public Job getJob(String jobId) {
         return null;
     }
 }

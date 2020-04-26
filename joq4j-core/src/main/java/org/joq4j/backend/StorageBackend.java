@@ -14,8 +14,6 @@ public interface StorageBackend extends Closeable {
 
     void storeJob(Job job);
 
-    Job getJob(String jobId);
-
     JobState getState(String jobId);
 
     void setState(String jobId, JobState status);

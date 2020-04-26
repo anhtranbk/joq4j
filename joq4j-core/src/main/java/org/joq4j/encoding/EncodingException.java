@@ -1,8 +1,5 @@
 package org.joq4j.encoding;
 
-/**
- * @author <a href="https://github.com/tjeubaoit">tjeubaoit</a>
- */
 public class EncodingException extends RuntimeException {
 
     public EncodingException() {

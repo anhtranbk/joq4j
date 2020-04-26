@@ -6,9 +6,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Base64;
 
-/**
- * @author <a href="https://github.com/tjeubaoit">tjeubaoit</a>
- */
 public interface MessageEncoder {
 
     <T> void write(T input, OutputStream out);

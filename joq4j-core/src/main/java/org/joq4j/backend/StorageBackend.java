@@ -8,9 +8,6 @@ import org.joq4j.encoding.TaskSerializer;
 
 import java.io.Closeable;
 
-/**
- * @author <a href="https://github.com/tjeubaoit">tjeubaoit</a>
- */
 public interface StorageBackend extends Closeable {
 
     TaskSerializer getTaskSerializer();

@@ -1,4 +1,4 @@
-package org.joq4j.common;
+package org.joq4j.common.func;
 
 /**
  * @author <a href="https://github.com/tjeubaoit">tjeubaoit</a>

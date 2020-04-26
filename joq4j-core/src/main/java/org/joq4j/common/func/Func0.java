@@ -1,4 +1,4 @@
-package org.joq4j.common;
+package org.joq4j.common.func;
 
 @FunctionalInterface
 public interface Func0<R> {

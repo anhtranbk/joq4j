@@ -1,6 +1,6 @@
 package org.joq4j.common.utils;
 
-import org.joq4j.common.Func0;
+import org.joq4j.common.func.Func0;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

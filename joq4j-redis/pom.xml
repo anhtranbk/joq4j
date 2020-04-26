@@ -12,6 +12,12 @@
   <artifactId>joq4j-redis</artifactId>
 
   <dependencies>
+    <dependency>
+      <groupId>org.joq4j</groupId>
+      <artifactId>joq4j-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
     <!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
     <dependency>
       <groupId>redis.clients</groupId>

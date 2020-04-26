@@ -38,13 +38,13 @@ public class JobQueueImplTest {
 
     @After
     public void tearDown() throws Exception {
-        queue.getBroker().close();
-        queue.getBackend().close();
+        queue.broker().close();
+        queue.broker().close();
     }
 
     @Test
     public void getName() {
-        assertEquals("test", queue.getName());
+        assertEquals("test", queue.name());
     }
 
     @Test

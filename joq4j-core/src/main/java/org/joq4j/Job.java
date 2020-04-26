@@ -1,7 +1,5 @@
 package org.joq4j;
 
-import java.util.Map;
-
 public interface Job {
 
     String FIELD_STATE = "state";
@@ -25,43 +23,15 @@ public interface Job {
 
     TaskOptions options();
 
-    JobState state();
-
     String queueName();
 
     Task task();
 
     String worker();
 
-    Map<String, String> dumps();
-
-    void loads(Map<String, String> fieldMap);
-
     Object perform();
 
-    Throwable error() throws IllegalStateException;
+    Throwable error();
 
-    Object result() throws IllegalStateException;
-
-    default boolean isStarted() {
-        return this.state() == JobState.STARTED;
-    }
-
-    default boolean isDone() {
-        JobState state = this.state();
-        return state == JobState.SUCCESS || state == JobState.FAILURE
-                || state == JobState.CANCELLED;
-    }
-
-    default boolean isSuccess() {
-        return this.state() == JobState.SUCCESS;
-    }
-
-    default boolean isFailure() {
-        return this.state() == JobState.FAILURE;
-    }
-
-    default boolean isCancelled() {
-        return this.state() == JobState.CANCELLED;
-    }
+    Object result();
 }

@@ -16,7 +16,11 @@ import java.util.List;
 
 public interface JobQueue {
 
-    String getName();
+    String name();
+
+    Broker broker();
+
+    StorageBackend backend();
 
     AsyncResult enqueue(Task task);
 

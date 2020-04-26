@@ -26,8 +26,8 @@ import java.util.TreeSet;
 public class Config {
 
     private static final String LIST_DELIMITER = ",";
-    private static final String CONF_ENV = "agraph.conf";
-    private static final String DEFAULT_NAME = "agraph.properties";
+    private static final String CONF_ENV = "joq4j.conf";
+    private static final String DEFAULT_NAME = "joq4j.properties";
 
     /**
      * @param path Path to file use as default resource to load properties

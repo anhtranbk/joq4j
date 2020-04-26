@@ -6,40 +6,62 @@ import org.joq4j.JobState;
 import org.joq4j.common.utils.DateTimes;
 import org.joq4j.common.utils.StringMap;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import static org.joq4j.Job.FIELD_DESCRIPTION;
 import static org.joq4j.Job.FIELD_ERROR;
 import static org.joq4j.Job.FIELD_FINISHED_AT;
+import static org.joq4j.Job.FIELD_ID;
+import static org.joq4j.Job.FIELD_NAME;
 import static org.joq4j.Job.FIELD_QUEUED_AT;
 import static org.joq4j.Job.FIELD_RESULT;
 import static org.joq4j.Job.FIELD_STARTED_AT;
 import static org.joq4j.Job.FIELD_STATE;
+import static org.joq4j.Job.FIELD_WORKER;
 
 public interface KeyValueBackend extends StorageBackend {
 
-    String JOB_META_KEY_PREFIX = "jq:job:meta:";
-    String JOB_PROPERTY_PREFIX = "jq:job:prop:";
+    String JOB_KEY_PREFIX = "jq:job:";
 
-    void putMap(String key, Map<String, String> fieldMap);
+    void put(String key, Map<String, String> fieldMap);
 
-    void putToMap(String key, String field, String value);
+    void putOne(String key, String field, String value);
 
-    String getFromMap(String key, String field);
+    String getOne(String key, String field);
 
-    Map<String, String> getMap(String key);
+    Map<String, String> get(String key);
 
-    String removeFromMap(String key, String field);
+    String removeOne(String key, String field);
 
-    Map<String, String> removeMap(String key);
+    Map<String, String> remove(String key);
 
     default void storeJob(Job job) {
-        Map<String, String> map = job.dumps();
-        putMap(generateJobMetaKey(job.id()), map);
+        Map<String, String> fieldMap = new HashMap<>();
+
+        fieldMap.put(FIELD_ID, job.id());
+        fieldMap.put(FIELD_NAME, job.options().name());
+        fieldMap.put(FIELD_DESCRIPTION, job.options().description());
+
+        fieldMap.put(FIELD_WORKER, job.worker());
+        fieldMap.put(FIELD_RESULT, "");
+        fieldMap.put(FIELD_ERROR, "");
+
+        fieldMap.put(FIELD_QUEUED_AT, "");
+        fieldMap.put(FIELD_STARTED_AT, "");
+        fieldMap.put(FIELD_FINISHED_AT, "");
+
+        put(generateJobKey(job.id()), fieldMap);
+    }
+
+    default Job getJob(String jobId) {
+//        Job job =
+        throw new UnsupportedOperationException();
     }
 
     default JobState getState(String jobId) {
-        String status = getFromMap(generateJobMetaKey(jobId), FIELD_STATE);
-        return JobState.valueOf(status);
+        String state = getOne(generateJobKey(jobId), FIELD_STATE);
+        return JobState.valueOf(state);
     }
 
     default void setState(String jobId, JobState status) {
@@ -60,15 +82,7 @@ public interface KeyValueBackend extends StorageBackend {
                 break;
         }
         map.put(FIELD_STATE, status.getName());
-        putMap(generateJobMetaKey(jobId), map);
-    }
-
-    default Map<String, String> getMeta(String jobId) {
-        return getMap(generateJobMetaKey(jobId));
-    }
-
-    default void updateMeta(String jobId, Map<String, String> meta) {
-        putMap(generateJobMetaKey(jobId), meta);
+        put(generateJobKey(jobId), map);
     }
 
     default void markAsSuccess(String jobId, Object result) {
@@ -76,7 +90,7 @@ public interface KeyValueBackend extends StorageBackend {
         map.put(FIELD_STATE, JobState.SUCCESS.getName());
         map.put(FIELD_FINISHED_AT, DateTimes.currentDateTimeAsIsoString());
         map.put(FIELD_RESULT, getTaskSerializer().writeAsBase64(result, Object.class));
-        putMap(generateJobMetaKey(jobId), map);
+        put(generateJobKey(jobId), map);
     }
 
     default void markAsFailure(String jobId, Throwable error) {
@@ -84,24 +98,21 @@ public interface KeyValueBackend extends StorageBackend {
         map.put(FIELD_STATE, JobState.FAILURE.getName());
         map.put(FIELD_FINISHED_AT, DateTimes.currentDateTimeAsIsoString());
         map.put(FIELD_RESULT, error.getMessage());
-        putMap(generateJobMetaKey(jobId), map);
+        put(generateJobKey(jobId), map);
     }
 
     default JobExecutionException getError(String jobId) throws IllegalStateException {
-        ensureJobFinished(jobId);
-        return new JobExecutionException(getFromMap(generateJobMetaKey(jobId), FIELD_ERROR));
+        this.ensureJobFinished(jobId);
+        String key = this.generateJobKey(jobId);
+        return new JobExecutionException(this.getOne(key, FIELD_ERROR));
     }
 
     default Object getResult(String jobId) throws IllegalStateException {
-        ensureJobFinished(jobId);
-        return getFromMap(generateJobMetaKey(jobId), FIELD_RESULT);
+        this.ensureJobFinished(jobId);
+        return getOne(generateJobKey(jobId), FIELD_RESULT);
     }
 
-    default String generateJobMetaKey(String jobId) {
-        return JOB_META_KEY_PREFIX + jobId;
-    }
-
-    default String generateJobPropertyKey(String jobId) {
-        return JOB_PROPERTY_PREFIX + jobId;
+    default String generateJobKey(String jobId) {
+        return JOB_KEY_PREFIX + jobId;
     }
 }

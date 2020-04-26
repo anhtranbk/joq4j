@@ -9,16 +9,7 @@ public interface Task extends Serializable, Callable<Object> {
         return new DoNothingTask();
     }
 
-    default boolean isCancelable() {
-        return false;
-    }
-
     class DoNothingTask implements Task {
-        @Override
-        public boolean isCancelable() {
-            return false;
-        }
-
         @Override
         public Object call() throws Exception {
             return null;

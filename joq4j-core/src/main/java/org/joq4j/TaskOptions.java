@@ -2,13 +2,11 @@ package org.joq4j;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import org.joq4j.config.ConfigDescriptor;
-import org.joq4j.config.Configurable;
 
 import java.util.concurrent.TimeUnit;
 
 @Accessors(chain = true, fluent = true)
-public @Data class TaskOptions implements Configurable {
+public @Data class TaskOptions {
 
     /**
      * Custom job name, default is empty
@@ -31,15 +29,6 @@ public @Data class TaskOptions implements Configurable {
     private long retryDelay = 180;
 
     private int priority = 1;
-
-    @ConfigDescriptor(name = "joq4j.worker.storeResult")
-    private boolean storeResult = true;
-
-    @ConfigDescriptor(name = "joq4j.worker.storeErrorEventIfIgnored")
-    private boolean storeErrorEventIfIgnored = true;
-
-    @ConfigDescriptor(name = "joq4j.worker.sentEvents")
-    private boolean sentEvents = false;
 
     /**
      * Specifies the maximum runtime of the job before it’s interrupted and marked

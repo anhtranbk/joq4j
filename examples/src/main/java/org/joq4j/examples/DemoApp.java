@@ -10,18 +10,11 @@ public class DemoApp {
 
     public static void main(String[] args) throws Exception {
         Broker broker = new MemoryBroker();
-        JobQueue queue = JobQueue.builder().broker(broker).build();
-        Task task = new Task() {
-            @Override
-            public boolean isCancelable() {
-                return false;
-            }
-
-            @Override
-            public Object call() throws Exception {
-                return "Hello, World!";
-            }
-        };
+        JobQueue queue = JobQueue.builder()
+                .defaultTimeout(300)
+                .broker(broker)
+                .build();
+        Task task = (Task) () -> "Hello, World!";
         AsyncResult result = queue.enqueue(task);
         while (!result.isDone()) {
             Thread.sleep(1000);

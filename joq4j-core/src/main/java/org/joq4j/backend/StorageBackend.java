@@ -45,14 +45,31 @@ public interface StorageBackend extends Closeable {
         throw new JobExecutionException("Job timeout");
     }
 
-    default boolean isJobDone(String jobId) {
-        JobState status = getState(jobId);
-        return status.equals(JobState.SUCCESS) || status.equals(JobState.FAILURE);
-    }
-
     default void ensureJobFinished(String jobId) {
         if (!isJobDone(jobId)) {
             throw new IllegalStateException("Job is not finished " + jobId);
         }
+    }
+
+    default boolean isJobStarted(String jobId) {
+        return this.getState(jobId) == JobState.STARTED;
+    }
+
+    default boolean isJobDone(String jobId) {
+        JobState state = getState(jobId);
+        return state.equals(JobState.SUCCESS) || state.equals(JobState.FAILURE)
+                || state.equals(JobState.CANCELLED);
+    }
+
+    default boolean isJobSuccess(String jobId) {
+        return this.getState(jobId) == JobState.SUCCESS;
+    }
+
+    default boolean isFailure(String jobId) {
+        return this.getState(jobId) == JobState.FAILURE;
+    }
+
+    default boolean isJobCancelled(String jobId) {
+        return this.getState(jobId) == JobState.CANCELLED;
     }
 }

@@ -18,6 +18,7 @@ import static org.joq4j.Job.FIELD_QUEUED_AT;
 import static org.joq4j.Job.FIELD_RESULT;
 import static org.joq4j.Job.FIELD_STARTED_AT;
 import static org.joq4j.Job.FIELD_STATE;
+import static org.joq4j.Job.FIELD_TASK;
 import static org.joq4j.Job.FIELD_WORKER;
 
 public interface KeyValueBackend extends StorageBackend {
@@ -42,6 +43,7 @@ public interface KeyValueBackend extends StorageBackend {
         fieldMap.put(FIELD_ID, job.id());
         fieldMap.put(FIELD_NAME, job.options().name());
         fieldMap.put(FIELD_DESCRIPTION, job.options().description());
+        fieldMap.put(FIELD_TASK, job.task().getClass().getName());
 
         fieldMap.put(FIELD_WORKER, job.worker());
         fieldMap.put(FIELD_RESULT, "");
@@ -55,7 +57,6 @@ public interface KeyValueBackend extends StorageBackend {
     }
 
     default Job getJob(String jobId) {
-//        Job job =
         throw new UnsupportedOperationException();
     }
 

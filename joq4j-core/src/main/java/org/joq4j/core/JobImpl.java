@@ -18,11 +18,11 @@ public class JobImpl implements Job {
 
     private static final Logger logger = LoggerFactory.getLogger(JobImpl.class);
 
-    private TaskOptions options;
-    private String queueName;
     private String id;
+    private String queueName;
     private String worker = "";
     private Task task;
+    private TaskOptions options;
 
     private Date enqueuedAt;
     private Date startedAt;

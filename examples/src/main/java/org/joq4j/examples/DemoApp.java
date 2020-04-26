@@ -11,7 +11,6 @@ public class DemoApp {
     public static void main(String[] args) throws Exception {
         Broker broker = new MemoryBroker();
         JobQueue queue = JobQueue.builder()
-                .defaultTimeout(300)
                 .broker(broker)
                 .build();
         Task task = (Task) () -> "Hello, World!";

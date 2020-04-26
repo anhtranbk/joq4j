@@ -9,7 +9,7 @@ import java.util.Base64;
 /**
  * @author <a href="https://github.com/tjeubaoit">tjeubaoit</a>
  */
-public interface Encoder {
+public interface MessageEncoder {
 
     <T> void write(T input, OutputStream out);
 

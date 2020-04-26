@@ -9,12 +9,10 @@ import org.joq4j.JobState;
 import org.joq4j.QueueOptions;
 import org.joq4j.Task;
 import org.joq4j.TaskOptions;
-import org.joq4j.backend.NullBackend;
 import org.joq4j.backend.StorageBackend;
 import org.joq4j.broker.Broker;
-import org.joq4j.broker.MemoryBroker;
 import org.joq4j.config.Config;
-import org.joq4j.encoding.Encoder;
+import org.joq4j.encoding.MessageEncoder;
 import org.joq4j.encoding.TaskSerializer;
 
 @Accessors(fluent = true)
@@ -29,30 +27,20 @@ public class JobQueueImpl implements JobQueue {
     private final StorageBackend backend;
 
     private final long defaultTimeout;
-    private final Encoder jobEncoder;
+    private final MessageEncoder messageEncoder;
     private final TaskSerializer taskSerializer;
 
-    public JobQueueImpl(String name, Broker broker, StorageBackend backend,
-                        Encoder jobEncoder, TaskSerializer taskSerializer, long defaultTimeout) {
+    public JobQueueImpl(String name, Broker broker, StorageBackend backend, Config conf) {
         this.name = name;
-        this.queueKey = QUEUE_KEY_PREFIX + this.name;
-        this.defaultTimeout = defaultTimeout;
         this.broker = broker;
         this.backend = backend;
-        this.jobEncoder = jobEncoder;
-        this.taskSerializer = taskSerializer;
-    }
+        this.queueKey = QUEUE_KEY_PREFIX + this.name;
 
-    public JobQueueImpl(Config conf) {
         QueueOptions options = new QueueOptions();
         options.configure(conf);
 
-        this.name = options.name();
-        this.queueKey = QUEUE_KEY_PREFIX + this.name;
         this.defaultTimeout = options.defaultTimeout();
-        this.broker = new MemoryBroker();
-        this.backend = new NullBackend();
-        this.jobEncoder = options.encoder();
+        this.messageEncoder = options.messageEncoder();
         this.taskSerializer = options.taskSerializer();
     }
 
@@ -64,13 +52,16 @@ public class JobQueueImpl implements JobQueue {
     @Override
     public AsyncResult enqueue(Task task, TaskOptions options) {
         JobImpl job = new JobImpl(this.name, task, options);
-        broker.push(queueKey, jobEncoder.writeAsBase64(job));
+        broker.push(queueKey, messageEncoder.writeAsBase64(job));
+
+        backend.storeJob(job);
         backend.setState(job.id(), JobState.QUEUED);
+
         return new AsyncResultImpl(backend, job);
     }
 
     @Override
     public Job nextJob(String worker) {
-        return jobEncoder.readFromBase64(broker.pop(queueKey));
+        return messageEncoder.readFromBase64(broker.pop(queueKey));
     }
 }

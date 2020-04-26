@@ -6,11 +6,8 @@ import org.joq4j.backend.NullBackend;
 import org.joq4j.backend.StorageBackend;
 import org.joq4j.broker.Broker;
 import org.joq4j.broker.MemoryBroker;
+import org.joq4j.config.Config;
 import org.joq4j.core.JobQueueImpl;
-import org.joq4j.encoding.Encoder;
-import org.joq4j.encoding.JacksonEncoder;
-import org.joq4j.encoding.JavaTaskSerializer;
-import org.joq4j.encoding.TaskSerializer;
 
 import java.util.List;
 
@@ -48,16 +45,30 @@ public interface JobQueue {
     @Setter
     class Builder {
         private String name = "default";
-        private Encoder jobEncoder = new JacksonEncoder();
-        private TaskSerializer taskSerializer = new JavaTaskSerializer();
-        private long defaultTimeout = 600L;
         private Broker broker = new MemoryBroker();
         private StorageBackend backend = new NullBackend();
+        private Config config = new Config();
+
+        public Builder broker(Broker broker) {
+            this.broker = broker;
+            return this;
+        }
+
+        public Builder broker(String brokerUrl) {
+            return this;
+        }
+
+        public Builder backend(StorageBackend backend) {
+            this.backend = backend;
+            return this;
+        }
+
+        public Builder backend(String backendUrl) {
+            return this;
+        }
 
         public JobQueue build() {
-            return new JobQueueImpl(
-                    name, broker, backend,
-                    jobEncoder, taskSerializer, defaultTimeout);
+            return new JobQueueImpl(name, broker, backend, config);
         }
     }
 

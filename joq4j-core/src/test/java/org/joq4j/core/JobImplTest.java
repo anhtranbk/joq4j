@@ -5,7 +5,6 @@ import org.joq4j.Task;
 import org.joq4j.TaskOptions;
 import org.joq4j.backend.MemoryBackend;
 import org.joq4j.broker.MemoryBroker;
-import org.joq4j.encoding.JavaTaskSerializer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,8 +41,6 @@ public class JobImplTest {
         task = new SimpleTask(4, 9);
         queue = (JobQueueImpl) JobQueue.builder()
                 .name("test")
-                .defaultTimeout(500)
-                .taskSerializer(new JavaTaskSerializer())
                 .broker(new MemoryBroker())
                 .backend(new MemoryBackend())
                 .build();

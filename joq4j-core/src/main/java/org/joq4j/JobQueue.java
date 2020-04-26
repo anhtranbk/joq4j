@@ -55,7 +55,7 @@ public interface JobQueue {
         }
 
         public Builder broker(String brokerUrl) {
-            return this;
+            throw new UnsupportedOperationException();
         }
 
         public Builder backend(StorageBackend backend) {
@@ -64,7 +64,7 @@ public interface JobQueue {
         }
 
         public Builder backend(String backendUrl) {
-            return this;
+            throw new UnsupportedOperationException();
         }
 
         public JobQueue build() {

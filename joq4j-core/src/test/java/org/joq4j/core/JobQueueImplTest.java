@@ -1,13 +1,12 @@
 package org.joq4j.core;
 
 import org.joq4j.AsyncResult;
-import org.joq4j.Task;
 import org.joq4j.Job;
-import org.joq4j.TaskOptions;
 import org.joq4j.JobQueue;
+import org.joq4j.Task;
+import org.joq4j.TaskOptions;
 import org.joq4j.backend.MemoryBackend;
 import org.joq4j.broker.MemoryBroker;
-import org.joq4j.encoding.JavaTaskSerializer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,8 +28,6 @@ public class JobQueueImplTest {
         task = Task.doNothing();
         queue = (JobQueueImpl) JobQueue.builder()
                 .name("test")
-                .defaultTimeout(500)
-                .taskSerializer(new JavaTaskSerializer())
                 .broker(new MemoryBroker())
                 .backend(new MemoryBackend())
                 .build();

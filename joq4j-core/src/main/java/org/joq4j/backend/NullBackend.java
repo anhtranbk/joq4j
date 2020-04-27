@@ -3,16 +3,10 @@ package org.joq4j.backend;
 import org.joq4j.Job;
 import org.joq4j.JobExecutionException;
 import org.joq4j.JobState;
-import org.joq4j.encoding.TaskSerializer;
 
 import java.io.IOException;
 
 public class NullBackend implements StorageBackend {
-
-    @Override
-    public TaskSerializer getTaskSerializer() {
-        return null;
-    }
 
     @Override
     public void storeJob(Job job) {

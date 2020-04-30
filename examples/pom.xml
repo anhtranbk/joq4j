@@ -19,6 +19,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.joq4j</groupId>
+      <artifactId>joq4j-redis</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-slf4j-impl</artifactId>
       <version>2.12.1</version>

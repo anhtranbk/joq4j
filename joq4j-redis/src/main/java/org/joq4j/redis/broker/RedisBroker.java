@@ -15,7 +15,6 @@ public class RedisBroker implements Broker {
 
     @Override
     public void subscribe(Subscriber subscriber, String... channels) {
-
     }
 
     @Override
@@ -25,12 +24,12 @@ public class RedisBroker implements Broker {
 
     @Override
     public void publish(String channel, String message) {
-
+        jedis.publish(channel, message);
     }
 
     @Override
     public void push(String queue, String... values) {
-        jedis.rpush(queue, values);
+        jedis.lpush(queue, values);
     }
 
     @Override
@@ -40,6 +39,6 @@ public class RedisBroker implements Broker {
 
     @Override
     public void close() {
-
+        jedis.close();
     }
 }

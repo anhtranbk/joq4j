@@ -17,10 +17,10 @@ public class JobImpl implements Job {
 
     private static final Logger logger = LoggerFactory.getLogger(JobImpl.class);
 
-    private String id;
-    private Task task;
-    private TaskOptions options;
-    private String queueName;
+    private final String id;
+    private final Task task;
+    private final TaskOptions options;
+    private final String queueName;
 
     JobImpl(String queueName, Task task) {
         this(queueName, task, new TaskOptions());

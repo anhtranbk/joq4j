@@ -12,7 +12,8 @@ import org.joq4j.config.Configurable;
  * @author <a href="https://github.com/tjeubaoit">tjeubaoit</a>
  */
 @Accessors(chain = true, fluent = true)
-public @Data class RedisConf implements Configurable {
+public @Data
+class RedisConf implements Configurable {
 
     @ConfigDescriptor(name = "redis.url")
     private String url;
@@ -31,6 +32,24 @@ public @Data class RedisConf implements Configurable {
 
     @ConfigDescriptor(name = "redis.password")
     private String password;
+
+    @ConfigDescriptor(name = "pool.max.size")
+    private Integer poolSize;
+
+    @ConfigDescriptor(name = "pool.min.idle")
+    private Integer minIdle;
+
+    @ConfigDescriptor(name = "pool.max.idle")
+    private Integer maxIdle;
+
+    @ConfigDescriptor(name = "pool.test.on.borrow", defaultValue = "true")
+    private Boolean testOnBorrow;
+
+    @ConfigDescriptor(name = "pool.min.evictable.idle,millis", defaultValue = "30000")
+    private Long minEvictableIdleMillis;
+
+    @ConfigDescriptor(name = "pool.block.when.exhausted", defaultValue = "true")
+    private Boolean blockWhenExhausted;
 
     public RedisConf() {
         super();

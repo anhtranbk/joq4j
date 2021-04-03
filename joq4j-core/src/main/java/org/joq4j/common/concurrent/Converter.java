@@ -1,4 +1,4 @@
-package org.joq4j.common.concurrency;
+package org.joq4j.common.concurrent;
 
 /**
  * @author <a href="https://github.com/tjeubaoit">tjeubaoit</a>

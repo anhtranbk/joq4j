@@ -3,6 +3,7 @@ package org.joq4j.common.utils;
 import com.google.common.hash.Hashing;
 
 import java.nio.charset.Charset;
+import java.util.Base64;
 
 /**
  * @author <a href="https://github.com/tjeubaoit">tjeubaoit</a>
@@ -25,11 +26,7 @@ public class Hashings {
         return Hashing.sha1().hashBytes(input).toString();
     }
 
-    public static String sha1AsBase64(String input, boolean urlSafe) {
-        return Base64s.encodeAsString(sha1(input), urlSafe);
-    }
-
-    public static String sha1AsBase64(byte[] input, boolean urlSafe) {
-        return Base64s.encodeAsString(sha1(input), urlSafe);
+    public static String sha1AsBase64(String input) {
+        return Base64.getEncoder().encodeToString(sha1(input));
     }
 }

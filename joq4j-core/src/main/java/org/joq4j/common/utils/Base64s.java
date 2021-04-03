@@ -18,7 +18,8 @@ public class Base64s {
     }
 
     public static String encodeAsString(byte[] src, boolean urlSafe) {
-        return Strings.fromBytes(encode(src, urlSafe));
+        Base64.Encoder encoder = urlSafe ? Base64.getUrlEncoder() : Base64.getEncoder();
+        return encoder.encodeToString(src);
     }
 
     public static byte[] decode(String src, boolean urlSafe) {

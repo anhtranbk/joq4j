@@ -6,12 +6,13 @@ import java.io.Serializable;
 
 public enum JobState implements Serializable {
 
-    UNKNOWN("unknown"),
+    CREATED("created"),
     QUEUED("queued"),
-    REVOKED("revoked"),
-    STARTED("started"),
+    DEQUEUE("dequeue"),
+    RUNNING("running"),
     SUCCESS("success"),
     FAILURE("failure"),
+    RETRY("retry"),
     CANCELLED("cancelled");
 
     @Getter

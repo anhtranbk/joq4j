@@ -1,4 +1,4 @@
-package org.joq4j.common.concurrency;
+package org.joq4j.common.concurrent;
 
 import org.jetbrains.annotations.NotNull;
 

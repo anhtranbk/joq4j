@@ -4,13 +4,10 @@ import org.joq4j.Job;
 import org.joq4j.JobExecutionException;
 import org.joq4j.JobState;
 import org.joq4j.common.utils.Threads;
-import org.joq4j.encoding.TaskSerializer;
 
 import java.io.Closeable;
 
 public interface StorageBackend extends Closeable {
-
-    TaskSerializer getTaskSerializer();
 
     void storeJob(Job job);
 
@@ -47,7 +44,7 @@ public interface StorageBackend extends Closeable {
     }
 
     default boolean isJobStarted(String jobId) {
-        return this.getState(jobId) == JobState.STARTED;
+        return this.getState(jobId) == JobState.RUNNING;
     }
 
     default boolean isJobDone(String jobId) {

@@ -37,6 +37,8 @@ public interface KeyValueBackend extends StorageBackend {
 
     Map<String, String> remove(String key);
 
+    String encodeResult(Object result);
+
     default void storeJob(Job job) {
         Map<String, String> fieldMap = new HashMap<>();
 
@@ -68,7 +70,7 @@ public interface KeyValueBackend extends StorageBackend {
             case QUEUED:
                 map.put(FIELD_QUEUED_AT, now);
                 break;
-            case STARTED:
+            case RUNNING:
                 map.put(FIELD_STARTED_AT, now);
                 break;
             case FAILURE:
@@ -86,7 +88,7 @@ public interface KeyValueBackend extends StorageBackend {
         StringMap map = new StringMap();
         map.put(FIELD_STATE, JobState.SUCCESS.getName());
         map.put(FIELD_FINISHED_AT, DateTimes.currentDateTimeAsIsoString());
-        map.put(FIELD_RESULT, getTaskSerializer().writeAsBase64(result, Object.class));
+        map.put(FIELD_RESULT, this.encodeResult(result));
         put(generateJobKey(jobId), map);
     }
 

@@ -14,6 +14,8 @@ public @Data class QueueOptions implements Configurable {
 
     private int maxSize;
 
+    private int maxConcurrent;
+
     private long defaultTimeout = 1000;
 
     private MessageEncoder messageEncoder = new JacksonMessageEncoder();

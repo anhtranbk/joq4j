@@ -1,4 +1,4 @@
-package org.joq4j.common.concurrency;
+package org.joq4j.common.concurrent;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import org.jetbrains.annotations.NotNull;

@@ -1,8 +1,8 @@
 package org.joq4j.redis.backend;
 
 import org.joq4j.backend.KeyValueBackend;
-import org.joq4j.encoding.TaskSerializer;
-import org.joq4j.redis.RedisConf;
+import org.joq4j.config.Config;
+import org.joq4j.redis.connection.RedisConf;
 import org.joq4j.redis.connection.RedisConnectionProviders;
 import redis.clients.jedis.Jedis;
 
@@ -12,8 +12,12 @@ import java.util.Map;
 public class RedisBackend implements KeyValueBackend {
     private Jedis jedis;
 
-    public RedisBackend(){
+    public RedisBackend() {
         jedis = RedisConnectionProviders.getDefault(new RedisConf());
+    }
+
+    public RedisBackend(String url) {
+        jedis = RedisConnectionProviders.getDefault(new RedisConf(new Config(), url));
     }
 
     @Override
@@ -51,7 +55,7 @@ public class RedisBackend implements KeyValueBackend {
     }
 
     @Override
-    public TaskSerializer getTaskSerializer() {
+    public String encodeResult(Object result) {
         return null;
     }
 

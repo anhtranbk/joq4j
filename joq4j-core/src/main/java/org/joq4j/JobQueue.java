@@ -9,6 +9,7 @@ import org.joq4j.broker.MemoryBroker;
 import org.joq4j.config.Config;
 import org.joq4j.core.JobQueueImpl;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 public interface JobQueue {
@@ -19,11 +20,15 @@ public interface JobQueue {
 
     StorageBackend backend();
 
+    AsyncResult enqueue(Task task, String name);
+
     AsyncResult enqueue(Task task);
 
-    AsyncResult enqueue(Task task, TaskOptions options);
+    AsyncResult enqueue(Task task, JobCallback callback);
 
-    Job nextJob(String worker);
+    AsyncResult enqueue(Job job);
+
+    Job pop(String worker);
 
     default List<Job> getQueueJobs() {
         throw new UnsupportedOperationException();
@@ -55,6 +60,7 @@ public interface JobQueue {
 
         public Builder broker(Broker broker) {
             this.broker = broker;
+            Method method;
             return this;
         }
 

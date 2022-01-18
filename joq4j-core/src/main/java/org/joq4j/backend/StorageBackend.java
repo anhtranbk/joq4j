@@ -9,7 +9,22 @@ import java.io.Closeable;
 
 public interface StorageBackend extends Closeable {
 
+    String FIELD_STATE = "state";
+    String FIELD_RESULT = "result";
+    String FIELD_ERROR = "error";
+    String FIELD_QUEUED_AT = "queued_at";
+    String FIELD_STARTED_AT = "started_at";
+    String FIELD_FINISHED_AT = "finished_at";
+
+    String FIELD_WORKER = "worker";
+    String FIELD_TASK = "task";
+    String FIELD_ID = "id";
+    String FIELD_NAME = "name";
+    String FIELD_DESCRIPTION = "desc";
+
     void storeJob(Job job);
+
+    Job fetchJob(String jobId);
 
     JobState getState(String jobId);
 

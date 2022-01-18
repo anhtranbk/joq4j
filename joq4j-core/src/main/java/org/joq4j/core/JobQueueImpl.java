@@ -39,15 +39,27 @@ public class JobQueueImpl implements JobQueue {
     }
 
     @Override
-    public AsyncResult enqueue(Task task) {
-        return enqueue(task, new TaskOptions().timeout(this.defaultTimeout));
+    public AsyncResult enqueue(Task task, String name) {
+        return enqueue(Job.builder().name(name).task(task).build());
     }
 
     @Override
-    public AsyncResult enqueue(Task task, TaskOptions options) {
-        JobImpl job = new JobImpl(this.name, task, options);
-        broker.push(queueKey, messageEncoder.writeAsBase64(job));
+    public AsyncResult enqueue(Task task) {
+        return enqueue(Job.builder().task(task).build());
+    }
 
+    @Override
+    public AsyncResult enqueue(Task task, JobCallback callback) {
+        Job job = Job.builder()
+                .task(task)
+                .jobCallback(callback)
+                .build();
+        return enqueue(job);
+    }
+
+    @Override
+    public AsyncResult enqueue(Job job) {
+        broker.push(queueKey, messageEncoder.writeAsBase64(job));
         backend.storeJob(job);
         backend.setState(job.id(), JobState.QUEUED);
 
@@ -55,7 +67,7 @@ public class JobQueueImpl implements JobQueue {
     }
 
     @Override
-    public Job nextJob(String worker) {
+    public Job pop(String worker) {
         return messageEncoder.readFromBase64(broker.pop(queueKey));
     }
 }

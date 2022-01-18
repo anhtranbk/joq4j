@@ -13,6 +13,11 @@ public class NullBackend implements StorageBackend {
     }
 
     @Override
+    public Job fetchJob(String jobId) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public JobState getState(String jobId) {
         return null;
     }

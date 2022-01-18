@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class MemoryBackend implements KeyValueBackend {
 
-    private Map<String, Map<String, String>> mapMap = new HashMap<>();
+    private final Map<String, Map<String, String>> mapMap = new HashMap<>();
 
     @Override
     public void put(String key, Map<String, String> fieldMap) {

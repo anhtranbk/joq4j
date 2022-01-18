@@ -8,8 +8,8 @@ import java.util.Map;
 
 public class MemoryBroker implements Broker {
 
-    private Map<String, List<String>> listMap = new HashMap<>();
-    private Map<String, List<Subscriber>> subscriberMap = new HashMap<>();
+    private final Map<String, List<String>> listMap = new HashMap<>();
+    private final Map<String, List<Subscriber>> subscriberMap = new HashMap<>();
 
     @Override
     public void subscribe(Subscriber subscriber, String... channels) {

@@ -9,18 +9,6 @@ import org.joq4j.common.utils.StringMap;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.joq4j.Job.FIELD_DESCRIPTION;
-import static org.joq4j.Job.FIELD_ERROR;
-import static org.joq4j.Job.FIELD_FINISHED_AT;
-import static org.joq4j.Job.FIELD_ID;
-import static org.joq4j.Job.FIELD_NAME;
-import static org.joq4j.Job.FIELD_QUEUED_AT;
-import static org.joq4j.Job.FIELD_RESULT;
-import static org.joq4j.Job.FIELD_STARTED_AT;
-import static org.joq4j.Job.FIELD_STATE;
-import static org.joq4j.Job.FIELD_TASK;
-import static org.joq4j.Job.FIELD_WORKER;
-
 public interface KeyValueBackend extends StorageBackend {
 
     String JOB_KEY_PREFIX = "jq:job:";
@@ -43,8 +31,8 @@ public interface KeyValueBackend extends StorageBackend {
         Map<String, String> fieldMap = new HashMap<>();
 
         fieldMap.put(FIELD_ID, job.id());
-        fieldMap.put(FIELD_NAME, job.options().name());
-        fieldMap.put(FIELD_DESCRIPTION, job.options().description());
+        fieldMap.put(FIELD_NAME, job.name());
+        fieldMap.put(FIELD_DESCRIPTION, job.description());
         fieldMap.put(FIELD_TASK, job.task().getClass().getName());
 
         fieldMap.put(FIELD_WORKER, "");
@@ -56,6 +44,11 @@ public interface KeyValueBackend extends StorageBackend {
         fieldMap.put(FIELD_FINISHED_AT, "");
 
         put(generateJobKey(job.id()), fieldMap);
+    }
+
+    @Override
+    default Job fetchJob(String jobId) {
+        throw new UnsupportedOperationException();
     }
 
     default JobState getState(String jobId) {

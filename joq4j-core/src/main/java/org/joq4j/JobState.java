@@ -10,6 +10,7 @@ public enum JobState implements Serializable {
     QUEUED("queued"),
     DEQUEUE("dequeue"),
     PENDING("pending"),
+    STARTED("started"),
     RUNNING("running"),
     SUCCESS("success"),
     FAILURE("failure"),
@@ -17,7 +18,7 @@ public enum JobState implements Serializable {
     CANCELLED("cancelled");
 
     @Getter
-    private String name;
+    private final String name;
 
     JobState(String name) {
         this.name = name.toUpperCase();

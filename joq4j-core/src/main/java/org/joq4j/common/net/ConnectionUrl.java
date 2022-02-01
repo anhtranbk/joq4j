@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import org.joq4j.common.utils.Strings;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +22,7 @@ public @Data class ConnectionUrl {
     private String username;
     private String password;
     private String database;
+
     @Getter(AccessLevel.MODULE)
     private Map<String, String> parameters = new HashMap<>();
 
@@ -41,6 +43,10 @@ public @Data class ConnectionUrl {
     public String asString(boolean withCredentials) {
         StringBuilder sb = new StringBuilder();
         sb.append(scheme).append("://");
+        if (withCredentials && Strings.isNonEmpty(password)) {
+            sb.append(username != null ? username : "");
+            sb.append(":").append(password).append("@");
+        }
         if (username != null && password != null && withCredentials) {
             sb.append(username).append(":").append(password).append("@");
         }

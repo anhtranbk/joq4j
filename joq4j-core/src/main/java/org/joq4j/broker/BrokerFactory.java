@@ -2,6 +2,7 @@ package org.joq4j.broker;
 
 import org.joq4j.Joq4jException;
 import org.joq4j.common.net.ConnectionUrl;
+import org.joq4j.common.utils.Strings;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -16,7 +17,8 @@ public class BrokerFactory {
         ConnectionUrl connectionUrl = ConnectionUrl.parseFromString(url);
         Class<? extends Broker> clazz = brokerRegistry.get(connectionUrl.scheme());
         if (clazz == null) {
-            throw new IllegalArgumentException("Scheme not found " + connectionUrl.scheme());
+            throw new IllegalArgumentException(
+                    Strings.format("Scheme %s not found", connectionUrl.scheme()));
         }
 
         try {

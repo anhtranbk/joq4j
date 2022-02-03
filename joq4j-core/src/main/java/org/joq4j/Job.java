@@ -47,6 +47,14 @@ public class Job {
 
     private final JobCallback jobCallback;
 
+    @Override
+    public String toString() {
+        return "Job{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
     public Job(String id, String groupId, String name, String description,
                long eta, long timeout, int maxRetries, long retryDelay, int priority,
                Task task, JobCallback jobCallback, Map<String, String> meta)
@@ -56,6 +64,9 @@ public class Job {
         }
         if (Strings.isNullOrWhitespace(groupId)) {
             groupId = id;
+        }
+        if (Strings.isNullOrWhitespace(name)) {
+            name = task.getClass().getName();
         }
         Preconditions.checkNotNull(task, "Task must not be null");
 

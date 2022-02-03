@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  *
@@ -13,6 +14,50 @@ public class Strings {
 
     public static String format(String format, Object... params) {
         return String.format(Locale.US, format, params);
+    }
+
+    public static String formatV2(String format, Object... params) {
+        Map<String, Object> mapParams = Maps.initFromKeyValues(params);
+        return formatV2(format, mapParams);
+    }
+
+    public static String formatV2(String template, Map<String, Object> parameters) {
+        char[] chars = template.toCharArray();
+        StringBuilder finalBuilder = new StringBuilder();
+        StringBuilder keyBuilder = new StringBuilder();
+
+        boolean isKey = false;
+        for (char aChar : chars) {
+            if (aChar == '{') {
+                if (isKey) {
+                    finalBuilder.append('{');
+                    finalBuilder.append(keyBuilder);
+                }
+                keyBuilder.setLength(0);
+                isKey = true;
+            } else if (aChar == '}') {
+                String key = keyBuilder.toString();
+                if (!parameters.containsKey(key)) {
+                    throw new IllegalArgumentException("Missing key: " + key);
+                }
+                finalBuilder.append(parameters.get(key));
+                isKey = false;
+                keyBuilder.setLength(0);
+            } else {
+                if (isKey) {
+                    keyBuilder.append(aChar);
+                } else {
+                    finalBuilder.append(aChar);
+                }
+            }
+        }
+
+        if (isKey) {
+            finalBuilder.append('{');
+            finalBuilder.append(keyBuilder);
+        }
+
+        return finalBuilder.toString();
     }
 
     public static String join(String separator, String... strs) {

@@ -12,6 +12,7 @@ public class Threads {
         executor.shutdown();
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void stopThreadPool(ExecutorService executor, long timeout, TimeUnit unit) {
         try {
             executor.shutdown();
@@ -31,6 +32,10 @@ public class Threads {
 
     public static void sleep(long duration, TimeUnit unit) {
         sleep(unit.toMillis(duration));
+    }
+
+    public static void sleepSeconds(long seconds) {
+        Threads.sleep(seconds * 1000);
     }
 
     public static String wrapWithThreadInfo(String msg) {

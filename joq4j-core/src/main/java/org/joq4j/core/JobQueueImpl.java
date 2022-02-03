@@ -8,11 +8,14 @@ import org.joq4j.broker.Broker;
 import org.joq4j.config.Config;
 import org.joq4j.encoding.MessageEncoder;
 import org.joq4j.encoding.TaskSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Accessors(fluent = true)
 @Getter
 public class JobQueueImpl implements JobQueue {
 
+    private static final Logger logger = LoggerFactory.getLogger(JobQueueImpl.class);
     private static final String QUEUE_KEY_PREFIX = "jq:queue:";
 
     private final String name;
@@ -60,6 +63,8 @@ public class JobQueueImpl implements JobQueue {
     @Override
     public AsyncResult enqueue(Job job) {
         broker.push(queueKey, messageEncoder.writeAsBase64(job));
+        logger.debug("Job enqueued: " + job);
+
         backend.storeJob(job);
         backend.setState(job.id(), JobState.QUEUED);
 

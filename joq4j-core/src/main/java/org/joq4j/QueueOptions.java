@@ -4,10 +4,8 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.joq4j.config.ConfigDescriptor;
 import org.joq4j.config.Configurable;
-import org.joq4j.encoding.JacksonMessageEncoder;
-import org.joq4j.encoding.JavaTaskSerializer;
-import org.joq4j.encoding.MessageEncoder;
-import org.joq4j.encoding.TaskSerializer;
+import org.joq4j.serde.JacksonMessageEncoder;
+import org.joq4j.serde.MessageEncoder;
 
 @Accessors(chain = true, fluent = true)
 public @Data class QueueOptions implements Configurable {
@@ -19,8 +17,6 @@ public @Data class QueueOptions implements Configurable {
     private long defaultTimeout = 1000;
 
     private MessageEncoder messageEncoder = new JacksonMessageEncoder();
-
-    private TaskSerializer taskSerializer = new JavaTaskSerializer();
 
     @ConfigDescriptor(name = "joq4j.worker.storeResult")
     private boolean storeResult = true;

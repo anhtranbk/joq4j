@@ -1,4 +1,4 @@
-package org.joq4j.encoding;
+package org.joq4j.serde;
 
 public class EncodingException extends RuntimeException {
 

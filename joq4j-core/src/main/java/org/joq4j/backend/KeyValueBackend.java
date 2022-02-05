@@ -1,8 +1,10 @@
 package org.joq4j.backend;
 
 import org.joq4j.Job;
+import org.joq4j.JobBuilder;
 import org.joq4j.JobExecutionException;
 import org.joq4j.JobState;
+import org.joq4j.Task;
 import org.joq4j.common.utils.DateTimes;
 import org.joq4j.common.utils.StringMap;
 
@@ -31,13 +33,14 @@ public interface KeyValueBackend extends StorageBackend {
             put(FIELD_GROUP_ID, job.groupId());
             put(FIELD_NAME, job.name());
             put(FIELD_DESCRIPTION, job.description());
-            put(FIELD_STATE, JobState.CREATED.getName());
 
             put(FIELD_ETA, String.valueOf(job.eta()));
             put(FIELD_TIMEOUT, String.valueOf(job.timeout()));
             put(FIELD_MAX_RETRIES, String.valueOf(job.maxRetries()));
             put(FIELD_RETRY_DELAY, String.valueOf(job.retryDelay()));
             put(FIELD_PRIORITY, String.valueOf(job.priority()));
+
+            put(FIELD_STATE, JobState.CREATED.getName());
         }};
 
         put(generateJobKey(job.id()), fieldMap);
@@ -48,7 +51,25 @@ public interface KeyValueBackend extends StorageBackend {
 
     @Override
     default Job fetchJob(String jobId) {
-        throw new UnsupportedOperationException();
+        Map<String, String> fieldMap = get(generateJobKey(jobId));
+        JobBuilder builder = Job.builder()
+                .id(fieldMap.get(FIELD_ID))
+                .groupId(fieldMap.get(FIELD_GROUP_ID))
+                .name(fieldMap.get(FIELD_NAME))
+                .description(fieldMap.getOrDefault(FIELD_DESCRIPTION, ""))
+                .task(Task.doNothing())
+                .eta(Long.parseLong(fieldMap.get(FIELD_ETA)))
+                .timeout(fieldMap.get(FIELD_TIMEOUT))
+                .maxRetries(Integer.parseInt(fieldMap.get(FIELD_MAX_RETRIES)))
+                .retryDelay(Long.parseLong(fieldMap.get(FIELD_RETRY_DELAY)))
+                .priority(Integer.parseInt(fieldMap.get(FIELD_PRIORITY)));
+
+        Map<String, String> metaMap = get(generateJobMetaKey(jobId));
+        if (metaMap != null && !metaMap.isEmpty()) {
+            builder.meta(metaMap);
+        }
+
+        return builder.build();
     }
 
     default JobState getState(String jobId) {

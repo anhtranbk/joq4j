@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class RedisConnections {
-    private static final Logger logger = LoggerFactory.getLogger(RedisConnections.class);
     private static final Map<String, JedisPool> clients = new TreeMap<>();
 
     public static synchronized Jedis getOrCreate(String name, RedisConf redisConf) {
@@ -32,7 +31,8 @@ public class RedisConnections {
         jedisPoolConfig.setMinEvictableIdleTimeMillis(redisConf.minEvictableIdleMillis());
         jedisPoolConfig.setBlockWhenExhausted(redisConf.blockWhenExhausted());
 
-        logger.info("Init JedisPool from url " + redisConf.url(false));
+        LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME).info(
+                "Init JedisPool from url " + redisConf.url(false));
         return new JedisPool(jedisPoolConfig, URI.create(redisConf.url(true)));
     }
 

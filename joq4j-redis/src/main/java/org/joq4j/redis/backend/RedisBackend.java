@@ -1,23 +1,27 @@
 package org.joq4j.redis.backend;
 
+import com.google.common.base.Preconditions;
 import org.joq4j.backend.KeyValueBackend;
+import org.joq4j.common.utils.Strings;
 import org.joq4j.config.Config;
 import org.joq4j.redis.connection.RedisConf;
-import org.joq4j.redis.connection.RedisConnectionProviders;
+import org.joq4j.redis.connection.RedisConnections;
 import redis.clients.jedis.Jedis;
 
 import java.io.IOException;
 import java.util.Map;
 
 public class RedisBackend implements KeyValueBackend {
-    private Jedis jedis;
+    private final Jedis jedis;
 
-    public RedisBackend() {
-        jedis = RedisConnectionProviders.getDefault(new RedisConf());
+    public RedisBackend(Config config) {
+        jedis = RedisConnections.getDefault(new RedisConf(config));
     }
 
     public RedisBackend(String url) {
-        jedis = RedisConnectionProviders.getDefault(new RedisConf(new Config(), url));
+        Preconditions.checkArgument(Strings.isNonEmpty(url));
+        Preconditions.checkArgument(url.startsWith("redis://"));
+        jedis = RedisConnections.getDefault(new RedisConf(url));
     }
 
     @Override

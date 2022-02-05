@@ -2,14 +2,15 @@ package org.joq4j;
 
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.joq4j.backend.BackendFactory;
 import org.joq4j.backend.NullBackend;
 import org.joq4j.backend.StorageBackend;
 import org.joq4j.broker.Broker;
+import org.joq4j.broker.BrokerFactory;
 import org.joq4j.broker.MemoryBroker;
 import org.joq4j.config.Config;
 import org.joq4j.core.JobQueueImpl;
 
-import java.lang.reflect.Method;
 import java.util.List;
 
 public interface JobQueue {
@@ -60,12 +61,12 @@ public interface JobQueue {
 
         public Builder broker(Broker broker) {
             this.broker = broker;
-            Method method;
             return this;
         }
 
         public Builder broker(String brokerUrl) {
-            throw new UnsupportedOperationException();
+            this.broker = BrokerFactory.fromUrl(brokerUrl);
+            return this;
         }
 
         public Builder backend(StorageBackend backend) {
@@ -74,7 +75,8 @@ public interface JobQueue {
         }
 
         public Builder backend(String backendUrl) {
-            throw new UnsupportedOperationException();
+            this.backend = BackendFactory.fromUrl(backendUrl);
+            return this;
         }
 
         public JobQueue build() {

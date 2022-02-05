@@ -28,7 +28,7 @@ public class JobQueueImpl implements JobQueue {
     private final Broker broker;
     private final StorageBackend backend;
 
-    private final long defaultTimeout;
+    private final QueueOptions options;
     private final MessageEncoder messageEncoder;
 
     public JobQueueImpl(String name, Broker broker, StorageBackend backend, Config conf) {
@@ -40,7 +40,8 @@ public class JobQueueImpl implements JobQueue {
         QueueOptions options = new QueueOptions();
         options.configure(conf);
 
-        this.defaultTimeout = options.defaultTimeout();
+        this.options = new QueueOptions();
+        this.options.configure(conf);
         this.messageEncoder = options.messageEncoder();
     }
 

@@ -17,6 +17,8 @@ public interface JobQueue {
 
     String name();
 
+    QueueOptions options();
+
     Broker broker();
 
     StorageBackend backend();

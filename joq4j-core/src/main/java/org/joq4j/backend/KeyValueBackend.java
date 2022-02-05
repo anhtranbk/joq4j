@@ -26,22 +26,15 @@ public interface KeyValueBackend extends StorageBackend {
     Map<String, String> remove(String key);
 
     default void storeJob(Job job) {
-        Map<String, String> fieldMap = new HashMap<>();
-
-        fieldMap.put(FIELD_ID, job.id());
-        fieldMap.put(FIELD_NAME, job.name());
-        fieldMap.put(FIELD_DESCRIPTION, job.description());
-        fieldMap.put(FIELD_TASK, job.task().getClass().getName());
-
-        fieldMap.put(FIELD_WORKER, "");
-        fieldMap.put(FIELD_RESULT, "");
-        fieldMap.put(FIELD_ERROR, "");
-
-        fieldMap.put(FIELD_QUEUED_AT, "");
-        fieldMap.put(FIELD_STARTED_AT, "");
-        fieldMap.put(FIELD_FINISHED_AT, "");
+        Map<String, String> fieldMap = new HashMap<String, String>() {{
+            put(FIELD_ID, job.id());
+            put(FIELD_NAME, job.name());
+            put(FIELD_DESCRIPTION, job.description());
+            put(FIELD_STATE, JobState.CREATED.getName());
+        }};
 
         put(generateJobKey(job.id()), fieldMap);
+        put(generateJobMetaKey(job.id()), job.meta());
     }
 
     @Override
@@ -108,5 +101,9 @@ public interface KeyValueBackend extends StorageBackend {
 
     default String generateJobKey(String jobId) {
         return JOB_KEY_PREFIX + jobId;
+    }
+
+    default String generateJobMetaKey(String jobId) {
+        return JOB_KEY_PREFIX + jobId + ":meta";
     }
 }

@@ -30,6 +30,8 @@ public interface StorageBackend extends Closeable {
 
     void setState(String jobId, JobState status);
 
+    void setWorker(String jobId, String worker);
+
     void markAsSuccess(String jobId, Object result);
 
     void markAsFailure(String jobId, Throwable error);

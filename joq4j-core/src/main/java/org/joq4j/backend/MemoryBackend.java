@@ -42,11 +42,6 @@ public class MemoryBackend implements KeyValueBackend {
     }
 
     @Override
-    public String encodeResult(Object result) {
-        return null;
-    }
-
-    @Override
     public void close() throws IOException {
     }
 }

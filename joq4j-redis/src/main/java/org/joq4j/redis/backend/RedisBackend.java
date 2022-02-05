@@ -62,11 +62,6 @@ public class RedisBackend implements KeyValueBackend {
     }
 
     @Override
-    public String encodeResult(Object result) {
-        return null;
-    }
-
-    @Override
     public void close() throws IOException {
         jedis.close();
     }

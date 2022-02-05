@@ -76,7 +76,9 @@ public class JobQueueImpl implements JobQueue {
 
     @Override
     public Job pop(String worker) {
-        final String serializedJob = broker.pop(queueKey);
-        return messageEncoder.read(serializedJob, JobBuilder.class).build();
+        String serializedJob = broker.pop(queueKey);
+        Job job = messageEncoder.read(serializedJob, JobBuilder.class).build();
+        backend.setWorker(job.id(), worker);
+        return job;
     }
 }

@@ -25,8 +25,6 @@ public interface KeyValueBackend extends StorageBackend {
 
     Map<String, String> remove(String key);
 
-    String encodeResult(Object result);
-
     default void storeJob(Job job) {
         Map<String, String> fieldMap = new HashMap<>();
 
@@ -77,11 +75,15 @@ public interface KeyValueBackend extends StorageBackend {
         put(generateJobKey(jobId), map);
     }
 
+    default void setWorker(String jobId, String worker) {
+        putOne(generateJobKey(jobId), FIELD_WORKER, worker);
+    }
+
     default void markAsSuccess(String jobId, Object result) {
         StringMap map = new StringMap();
         map.put(FIELD_STATE, JobState.SUCCESS.getName());
         map.put(FIELD_FINISHED_AT, DateTimes.currentDateTimeAsIsoString());
-        map.put(FIELD_RESULT, this.encodeResult(result));
+        map.put(FIELD_RESULT, result.toString());
         put(generateJobKey(jobId), map);
     }
 

@@ -30,6 +30,10 @@ public class NullBackend implements StorageBackend {
     }
 
     @Override
+    public void setWorker(String jobId, String worker) {
+    }
+
+    @Override
     public void markAsSuccess(String jobId, Object result) {
     }
 

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.joq4j.AsyncResult;
 import org.joq4j.Job;
+import org.joq4j.JobBuilder;
 import org.joq4j.JobCallback;
 import org.joq4j.JobQueue;
 import org.joq4j.JobState;
@@ -75,6 +76,7 @@ public class JobQueueImpl implements JobQueue {
 
     @Override
     public Job pop(String worker) {
-        return messageEncoder.read(broker.pop(queueKey), Job.class);
+        final String serializedJob = broker.pop(queueKey);
+        return messageEncoder.read(serializedJob, JobBuilder.class).build();
     }
 }

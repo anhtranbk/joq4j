@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Use only for testing
+ */
 public class MemoryBackend implements KeyValueBackend {
 
     private final Map<String, Map<String, String>> mapMap = new HashMap<>();

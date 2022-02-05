@@ -6,6 +6,9 @@ import org.joq4j.JobState;
 
 import java.io.IOException;
 
+/**
+ * Default StorageBackend. Use if you want to ignore Job result
+ */
 public class NullBackend implements StorageBackend {
 
     @Override

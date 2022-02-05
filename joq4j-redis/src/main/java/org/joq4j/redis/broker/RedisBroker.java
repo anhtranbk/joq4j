@@ -2,11 +2,14 @@ package org.joq4j.redis.broker;
 
 import com.google.common.base.Preconditions;
 import org.joq4j.broker.Broker;
+import org.joq4j.broker.BrokerFactory;
 import org.joq4j.broker.Subscriber;
 import org.joq4j.common.utils.Strings;
 import org.joq4j.config.Config;
 import org.joq4j.redis.connection.RedisConf;
 import org.joq4j.redis.connection.RedisConnections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 
@@ -74,5 +77,10 @@ public class RedisBroker implements Broker {
         public void onUnsubscribe(String channel, int subscribedChannels) {
             subscriber.onUnsubscribe(channel);
         }
+    }
+
+    static {
+        BrokerFactory.addRegistry("redis", RedisBroker.class);
+        LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME).debug("BrokerFactory registry added scheme redis");
     }
 }

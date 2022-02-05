@@ -2,16 +2,13 @@ package org.joq4j;
 
 import lombok.Getter;
 
-import java.io.Serializable;
-
-public enum JobState implements Serializable {
+public enum JobState {
 
     CREATED("created"),
+    SCHEDULED("scheduled"),
     QUEUED("queued"),
-    DEQUEUE("dequeue"),
-    PENDING("pending"),
+    PAUSED("paused"),
     STARTED("started"),
-    RUNNING("running"),
     SUCCESS("success"),
     FAILURE("failure"),
     RETRY("retry"),

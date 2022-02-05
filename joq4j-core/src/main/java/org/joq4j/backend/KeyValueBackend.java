@@ -63,7 +63,7 @@ public interface KeyValueBackend extends StorageBackend {
             case QUEUED:
                 map.put(FIELD_QUEUED_AT, now);
                 break;
-            case RUNNING:
+            case STARTED:
                 map.put(FIELD_STARTED_AT, now);
                 break;
             case FAILURE:

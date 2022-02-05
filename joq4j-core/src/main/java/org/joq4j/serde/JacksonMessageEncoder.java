@@ -23,6 +23,10 @@ public class JacksonMessageEncoder implements MessageEncoder {
         om.registerModule(module);
     }
 
+    public static ObjectMapper currentObjectMapper() {
+        return om;
+    }
+
     @Override
     public <T> void write(T input, OutputStream out) {
         try {

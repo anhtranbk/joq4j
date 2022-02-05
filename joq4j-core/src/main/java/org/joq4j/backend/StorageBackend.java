@@ -19,8 +19,15 @@ public interface StorageBackend extends Closeable {
     String FIELD_WORKER = "worker";
     String FIELD_TASK = "task";
     String FIELD_ID = "id";
+    String FIELD_GROUP_ID = "group_id";
     String FIELD_NAME = "name";
     String FIELD_DESCRIPTION = "desc";
+
+    String FIELD_ETA = "eta";
+    String FIELD_TIMEOUT = "timeout";
+    String FIELD_MAX_RETRIES = "max_retries";
+    String FIELD_RETRY_DELAY = "retry_delay";
+    String FIELD_PRIORITY = "priority";
 
     void storeJob(Job job);
 

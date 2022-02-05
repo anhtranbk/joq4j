@@ -28,13 +28,22 @@ public interface KeyValueBackend extends StorageBackend {
     default void storeJob(Job job) {
         Map<String, String> fieldMap = new HashMap<String, String>() {{
             put(FIELD_ID, job.id());
+            put(FIELD_GROUP_ID, job.groupId());
             put(FIELD_NAME, job.name());
             put(FIELD_DESCRIPTION, job.description());
             put(FIELD_STATE, JobState.CREATED.getName());
+
+            put(FIELD_ETA, String.valueOf(job.eta()));
+            put(FIELD_TIMEOUT, String.valueOf(job.timeout()));
+            put(FIELD_MAX_RETRIES, String.valueOf(job.maxRetries()));
+            put(FIELD_RETRY_DELAY, String.valueOf(job.retryDelay()));
+            put(FIELD_PRIORITY, String.valueOf(job.priority()));
         }};
 
         put(generateJobKey(job.id()), fieldMap);
-        put(generateJobMetaKey(job.id()), job.meta());
+        if (!job.meta().isEmpty()) {
+            put(generateJobMetaKey(job.id()), job.meta());
+        }
     }
 
     @Override

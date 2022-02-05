@@ -6,7 +6,7 @@ public interface Broker extends Closeable {
 
     void subscribe(Subscriber subscriber, String... channels);
 
-    void unsubscribe(Subscriber subscriber, String... channels);
+    void unsubscribe(String... channels);
 
     void publish(String channel, String message);
 

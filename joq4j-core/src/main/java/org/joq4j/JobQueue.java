@@ -3,10 +3,12 @@ package org.joq4j;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.joq4j.backend.BackendFactory;
+import org.joq4j.backend.BackendFactoryRegistry;
 import org.joq4j.backend.NullBackend;
 import org.joq4j.backend.StorageBackend;
 import org.joq4j.broker.Broker;
 import org.joq4j.broker.BrokerFactory;
+import org.joq4j.broker.BrokerFactoryRegistry;
 import org.joq4j.broker.MemoryBroker;
 import org.joq4j.config.Config;
 import org.joq4j.core.JobQueueImpl;
@@ -67,7 +69,8 @@ public interface JobQueue {
         }
 
         public Builder broker(String brokerUrl) {
-            this.broker = BrokerFactory.fromUrl(brokerUrl);
+            BrokerFactory factory = BrokerFactoryRegistry.findFactory(brokerUrl);
+            this.broker = factory.createBroker(config, brokerUrl);
             return this;
         }
 
@@ -77,7 +80,8 @@ public interface JobQueue {
         }
 
         public Builder backend(String backendUrl) {
-            this.backend = BackendFactory.fromUrl(backendUrl);
+            BackendFactory factory = BackendFactoryRegistry.findFactory(backendUrl);
+            this.backend = factory.createBackend(config, backendUrl);
             return this;
         }
 

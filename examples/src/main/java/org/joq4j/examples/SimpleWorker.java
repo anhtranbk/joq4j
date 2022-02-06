@@ -3,8 +3,8 @@ package org.joq4j.examples;
 import org.joq4j.Job;
 import org.joq4j.JobQueue;
 import org.joq4j.common.utils.Threads;
-import org.joq4j.redis.backend.RedisBackend;
-import org.joq4j.redis.broker.RedisBroker;
+import org.joq4j.redis.jedis.RedisBackendFactory;
+import org.joq4j.redis.jedis.RedisBrokerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,10 +13,13 @@ public class SimpleWorker {
     static final Logger logger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
 
     public static void main(String[] args) throws Exception {
+        Class.forName(RedisBrokerFactory.class.getName());
+        Class.forName(RedisBackendFactory.class.getName());
+
         String redisUrl = "redis://localhost:6379/0";
         JobQueue queue = JobQueue.builder()
-                .broker(new RedisBroker(redisUrl))
-                .backend(new RedisBackend(redisUrl))
+                .broker(redisUrl)
+                .backend(redisUrl)
                 .build();
 
         //noinspection InfiniteLoopStatement

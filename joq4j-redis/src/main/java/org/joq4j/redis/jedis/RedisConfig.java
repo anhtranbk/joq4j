@@ -1,4 +1,4 @@
-package org.joq4j.redis.connection;
+package org.joq4j.redis.jedis;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -12,7 +12,7 @@ import org.joq4j.config.Configurable;
 
 @Accessors(chain = true, fluent = true)
 public @Data
-class RedisConf implements Configurable {
+class RedisConfig implements Configurable {
 
     @ConfigDescriptor(name = "redis.url")
     @Getter(AccessLevel.NONE)
@@ -30,34 +30,30 @@ class RedisConf implements Configurable {
     @ConfigDescriptor(name = "redis.password")
     private String password;
 
-    @ConfigDescriptor(name = "redis.pool.maxSize", defaultValue = "10")
+    @ConfigDescriptor(name = "jedis.pool.maxSize", defaultValue = "10")
     private Integer poolSize;
 
-    @ConfigDescriptor(name = "redis.pool.minIdle", defaultValue = "1")
+    @ConfigDescriptor(name = "jedis.pool.minIdle", defaultValue = "1")
     private Integer minIdle;
 
-    @ConfigDescriptor(name = "redis.pool.maxIdle", defaultValue = "5")
+    @ConfigDescriptor(name = "jedis.pool.maxIdle", defaultValue = "5")
     private Integer maxIdle;
 
-    @ConfigDescriptor(name = "redis.pool.testOnBorrow", defaultValue = "true")
+    @ConfigDescriptor(name = "jedis.pool.testOnBorrow", defaultValue = "true")
     private Boolean testOnBorrow;
 
-    @ConfigDescriptor(name = "redis.pool.minEvictableIdleMillis", defaultValue = "30000")
+    @ConfigDescriptor(name = "jedis.pool.minEvictableIdleMillis", defaultValue = "30000")
     private Long minEvictableIdleMillis;
 
-    @ConfigDescriptor(name = "redis.pool.blockWhenExhausted", defaultValue = "true")
+    @ConfigDescriptor(name = "jedis.pool.blockWhenExhausted", defaultValue = "true")
     private Boolean blockWhenExhausted;
 
-    public RedisConf() {
-        this.configure(new Config());
-    }
-
-    public RedisConf(String url) {
-        this.configure(new Config());
+    public RedisConfig(Config conf, String url) {
+        this(conf);
         this.url = url;
     }
 
-    public RedisConf(Config conf) {
+    public RedisConfig(Config conf) {
         this.configure(conf);
     }
 

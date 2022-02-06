@@ -1,30 +1,19 @@
 package org.joq4j.redis.backend;
 
-import com.google.common.base.Preconditions;
-import org.joq4j.backend.BackendFactory;
 import org.joq4j.backend.KeyValueBackend;
-import org.joq4j.common.utils.Strings;
-import org.joq4j.config.Config;
-import org.joq4j.redis.connection.RedisConf;
-import org.joq4j.redis.connection.RedisConnections;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import java.io.IOException;
 import java.util.Map;
 
 public class RedisBackend implements KeyValueBackend {
     private final Jedis jedis;
+    private final JedisPool pool;
 
-    public RedisBackend(Config config) {
-        jedis = RedisConnections.getDefault(new RedisConf(config));
-    }
-
-    public RedisBackend(String url) {
-        Preconditions.checkArgument(Strings.isNonEmpty(url));
-        Preconditions.checkArgument(url.startsWith("redis://"));
-        jedis = RedisConnections.getDefault(new RedisConf(url));
+    public RedisBackend(JedisPool pool) {
+        this.jedis = pool.getResource();
+        this.pool = pool;
     }
 
     @Override
@@ -63,11 +52,7 @@ public class RedisBackend implements KeyValueBackend {
 
     @Override
     public void close() throws IOException {
-        jedis.close();
-    }
-
-    static {
-        BackendFactory.addRegistry("redis", RedisBackend.class);
-        LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME).debug("BackendFactory registry added scheme redis");
+        this.jedis.close();
+        this.pool.close();
     }
 }

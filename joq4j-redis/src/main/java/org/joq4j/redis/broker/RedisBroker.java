@@ -1,29 +1,18 @@
 package org.joq4j.redis.broker;
 
-import com.google.common.base.Preconditions;
 import org.joq4j.broker.Broker;
-import org.joq4j.broker.BrokerFactory;
 import org.joq4j.broker.Subscriber;
-import org.joq4j.common.utils.Strings;
-import org.joq4j.config.Config;
-import org.joq4j.redis.connection.RedisConf;
-import org.joq4j.redis.connection.RedisConnections;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPubSub;
 
 public class RedisBroker implements Broker {
     private final Jedis jedis;
+    private final JedisPool pool;
 
-    public RedisBroker(Config config) {
-        this.jedis = RedisConnections.getDefault(new RedisConf(config));
-    }
-
-    public RedisBroker(String url) {
-        Preconditions.checkArgument(Strings.isNonEmpty(url));
-        Preconditions.checkArgument(url.startsWith("redis://"));
-        this.jedis = RedisConnections.getDefault(new RedisConf(url));
+    public RedisBroker(JedisPool pool) {
+        this.jedis = pool.getResource();
+        this.pool = pool;
     }
 
     @Override
@@ -53,7 +42,8 @@ public class RedisBroker implements Broker {
 
     @Override
     public void close() {
-        jedis.close();
+        this.jedis.close();
+        this.pool.close();
     }
 
     private static class MyJedisPubSub extends JedisPubSub {
@@ -77,10 +67,5 @@ public class RedisBroker implements Broker {
         public void onUnsubscribe(String channel, int subscribedChannels) {
             subscriber.onUnsubscribe(channel);
         }
-    }
-
-    static {
-        BrokerFactory.addRegistry("redis", RedisBroker.class);
-        LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME).debug("BrokerFactory registry added scheme redis");
     }
 }

@@ -8,8 +8,8 @@ import org.joq4j.JobBuilder;
 import org.joq4j.JobQueue;
 import org.joq4j.backend.StorageBackend;
 import org.joq4j.common.utils.Threads;
-import org.joq4j.redis.backend.RedisBackend;
-import org.joq4j.redis.broker.RedisBroker;
+import org.joq4j.redis.jedis.RedisBackendFactory;
+import org.joq4j.redis.jedis.RedisBrokerFactory;
 import org.joq4j.serde.JacksonMessageEncoder;
 import org.joq4j.serde.MessageEncoder;
 
@@ -22,13 +22,13 @@ import java.util.concurrent.TimeUnit;
 public class RedisSampleApp {
 
     public static void main(String[] args) throws Exception {
-        Class.forName("org.joq4j.redis.broker.RedisBroker");
-        Class.forName("org.joq4j.redis.backend.RedisBackend");
+        Class.forName(RedisBrokerFactory.class.getName());
+        Class.forName(RedisBackendFactory.class.getName());
 
         String redisUrl = "redis://localhost:6379/0";
         JobQueue queue = JobQueue.builder()
-                .broker(new RedisBroker(redisUrl))
-                .backend(new RedisBackend(redisUrl))
+                .broker(redisUrl)
+                .backend(redisUrl)
                 .build();
 
         loopProduceConsumeJob(queue);

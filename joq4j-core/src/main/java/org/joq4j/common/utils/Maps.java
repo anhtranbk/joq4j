@@ -9,7 +9,6 @@ import java.util.TreeMap;
 /**
  * @author <a href="https://github.com/tjeubaoit">tjeubaoit</a>
  */
-@SuppressWarnings("unchecked")
 public class Maps {
 
     public static Map<String, Object> initFromKeyValues(Object... keyValues) {

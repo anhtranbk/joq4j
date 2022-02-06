@@ -6,10 +6,18 @@ import org.joq4j.JobState;
 
 import java.io.IOException;
 
+/**
+ * Default StorageBackend. Use if you want to ignore Job result
+ */
 public class NullBackend implements StorageBackend {
 
     @Override
     public void storeJob(Job job) {
+    }
+
+    @Override
+    public Job fetchJob(String jobId) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -19,6 +27,10 @@ public class NullBackend implements StorageBackend {
 
     @Override
     public void setState(String jobId, JobState status) {
+    }
+
+    @Override
+    public void setWorker(String jobId, String worker) {
     }
 
     @Override

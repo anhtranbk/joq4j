@@ -1,10 +1,9 @@
 package org.joq4j.core;
 
 import org.joq4j.AsyncResult;
-import org.joq4j.Job;
 import org.joq4j.JobQueue;
 import org.joq4j.Task;
-import org.joq4j.TaskOptions;
+import org.joq4j.Job;
 import org.joq4j.backend.MemoryBackend;
 import org.joq4j.broker.MemoryBroker;
 import org.junit.After;
@@ -49,19 +48,21 @@ public class JobQueueImplTest {
         int numJobs = 5;
         List<String> jobIds = new ArrayList<>(numJobs);
         for (int i = 0; i < numJobs; i++) {
-            AsyncResult ar = queue.enqueue(task, new TaskOptions()
+            AsyncResult ar = queue.enqueue(Job.builder()
+                    .task(task)
                     .name("job_" + i)
                     .description("job_description_" + i)
-                    .timeout(100 * i));
+                    .timeout(100 * i)
+                    .build());
             jobIds.add(ar.getJobId());
         }
         List<Job> jobs = queue.getPendingJobs();
         for (int i = 0; i < numJobs; i++) {
             Job job = jobs.get(i);
             assertEquals(jobIds.get(i), job.id());
-            assertEquals("job_" + i, job.options().name());
-            assertEquals("job_description_" + i, job.options().description());
-            assertEquals(100 * i, job.options().timeout());
+            assertEquals("job_" + i, job.name());
+            assertEquals("job_description_" + i, job.description());
+            assertEquals(100 * i, job.timeout());
         }
         assertEquals(numJobs, jobs.size());
     }
@@ -70,7 +71,7 @@ public class JobQueueImplTest {
     public void getTotalJob() {
         int numJobs = 5;
         for (int i = 0; i < numJobs; i++) {
-            queue.enqueue(task, new TaskOptions().name("job_" + i));
+            queue.enqueue(task, "job_" + i);
         }
         assertEquals(numJobs, queue.getTotalJob());
     }
@@ -78,7 +79,7 @@ public class JobQueueImplTest {
     @Test
     public void isEmpty() {
         assertTrue(queue.isEmpty());
-        queue.enqueue(task, new TaskOptions());
+        queue.enqueue(task);
         assertFalse(queue.isEmpty());
     }
 
@@ -86,12 +87,14 @@ public class JobQueueImplTest {
     public void enqueue() {
         int numJobs = 5;
         for (int i = 0; i < numJobs; i++) {
-            AsyncResult ar = queue.enqueue(task, new TaskOptions()
+            AsyncResult ar = queue.enqueue(Job.builder()
+                    .task(task)
                     .name("job_" + i)
-                    .description("job_description_" + i));
+                    .description("job_description_" + i)
+                    .build());
 
             List<Job> jobs = queue.getPendingJobs();
-            Job job = queue.nextJob("test");
+            Job job = queue.pop("test");
             assertEquals(job.id(), jobs.get(0).id());
             assertEquals(job.id(), ar.getJobId());
         }
@@ -101,29 +104,36 @@ public class JobQueueImplTest {
     public void nextJob() {
         int numJobs = 5;
         for (int i = 0; i < numJobs; i++) {
-            queue.enqueue(task, new TaskOptions()
+            queue.enqueue(Job.builder()
+                    .task(task)
                     .name("job_" + i)
-                    .description("job_description_" + i));
+                    .description("job_description_" + i)
+                    .build());
         }
-        queue.enqueue(task, new TaskOptions().name("job_test"));
+        queue.enqueue(Job.builder()
+                .task(task)
+                .name("job_test")
+                .build());
 
         for (int i = 0; i < numJobs; i++) {
-            Job job = queue.nextJob("test");
-            assertEquals("job_" + i, job.options().name());
-            assertEquals("job_description_" + i, job.options().description());
+            Job job = queue.pop("test");
+            assertEquals("job_" + i, job.name());
+            assertEquals("job_description_" + i, job.description());
         }
-        Job job = queue.nextJob("test");
-        assertEquals("job_test", job.options().name());
-        assertTrue(job.options().description().isEmpty());
+        Job job = queue.pop("test");
+        assertEquals("job_test", job.name());
+        assertTrue(job.description().isEmpty());
     }
 
     @Test
     public void clear() {
         int numJobs = 7;
         for (int i = 0; i < numJobs; i++) {
-            queue.enqueue(task, new TaskOptions()
+            queue.enqueue(Job.builder()
+                    .task(task)
                     .name("job_" + i)
-                    .description("job_description_" + i));
+                    .description("job_description_" + i)
+                    .build());
         }
         queue.clear();
         assertTrue(queue.isEmpty());

@@ -1,4 +1,4 @@
-package org.joq4j.encoding;
+package org.joq4j.serde;
 
 import lombok.Data;
 import org.junit.Test;
@@ -8,7 +8,7 @@ import java.util.Date;
 
 import static org.junit.Assert.*;
 
-public class JavaTaskSerializerTest {
+public class DefaultJavaSerializationTest {
 
     static @Data
     class Person implements Serializable {
@@ -44,11 +44,11 @@ public class JavaTaskSerializerTest {
         p.getCompany().setName("VCCorp");
         p.getCompany().setAddress("1 Nguyen Huy Tuong");
 
-        TaskSerializer taskSerializer = new JavaTaskSerializer();
-        String b = taskSerializer.writeAsBase64(p, Object.class);
+        JavaSerialization javaSerialization = new DefaultJavaSerialization();
+        String b = javaSerialization.serializeAsBase64(p, Object.class);
         System.out.println(b);
 
-        Person p2 = (Person) taskSerializer.readFromBase64(b, Object.class);
+        Person p2 = (Person) javaSerialization.deserializeFromBase64(b, Object.class);
         assertEquals(p, p2);
         assertEquals(p.getCompany(), p2.getCompany());
     }

@@ -1,15 +1,29 @@
 package org.joq4j.broker;
 
+import com.google.common.base.Preconditions;
+import org.joq4j.common.utils.Strings;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Use only for testing
+ */
 public class MemoryBroker implements Broker {
 
-    private Map<String, List<String>> listMap = new HashMap<>();
-    private Map<String, List<Subscriber>> subscriberMap = new HashMap<>();
+    private final Map<String, List<String>> listMap = new HashMap<>();
+    private final Map<String, List<Subscriber>> subscriberMap = new HashMap<>();
+
+    public MemoryBroker() {
+    }
+
+    public MemoryBroker(String url) {
+        Preconditions.checkArgument(Strings.isNonEmpty(url));
+        Preconditions.checkArgument(url.startsWith("mem://"));
+    }
 
     @Override
     public void subscribe(Subscriber subscriber, String... channels) {
@@ -20,10 +34,10 @@ public class MemoryBroker implements Broker {
     }
 
     @Override
-    public void unsubscribe(Subscriber subscriber, String... channels) {
+    public void unsubscribe(String... channels) {
         for (String channel : channels) {
-            subscriberMap.get(channel).remove(subscriber);
-            subscriber.onUnsubscribe(channel);
+            subscriberMap.get(channel).forEach(subscriber -> subscriber.onUnsubscribe(channel));
+            subscriberMap.remove(channel);
         }
     }
 

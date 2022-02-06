@@ -4,9 +4,12 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Use only for testing
+ */
 public class MemoryBackend implements KeyValueBackend {
 
-    private Map<String, Map<String, String>> mapMap = new HashMap<>();
+    private final Map<String, Map<String, String>> mapMap = new HashMap<>();
 
     @Override
     public void put(String key, Map<String, String> fieldMap) {
@@ -36,11 +39,6 @@ public class MemoryBackend implements KeyValueBackend {
     @Override
     public Map<String, String> remove(String key) {
         return mapMap.remove(key);
-    }
-
-    @Override
-    public String encodeResult(Object result) {
-        return null;
     }
 
     @Override

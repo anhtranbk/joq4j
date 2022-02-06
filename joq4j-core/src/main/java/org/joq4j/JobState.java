@@ -2,21 +2,20 @@ package org.joq4j;
 
 import lombok.Getter;
 
-import java.io.Serializable;
-
-public enum JobState implements Serializable {
+public enum JobState {
 
     CREATED("created"),
+    SCHEDULED("scheduled"),
     QUEUED("queued"),
-    DEQUEUE("dequeue"),
-    RUNNING("running"),
+    PAUSED("paused"),
+    STARTED("started"),
     SUCCESS("success"),
     FAILURE("failure"),
     RETRY("retry"),
     CANCELLED("cancelled");
 
     @Getter
-    private String name;
+    private final String name;
 
     JobState(String name) {
         this.name = name.toUpperCase();

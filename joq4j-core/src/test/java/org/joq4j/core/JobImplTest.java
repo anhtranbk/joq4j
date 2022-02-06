@@ -1,8 +1,8 @@
 package org.joq4j.core;
 
+import org.joq4j.Job;
 import org.joq4j.JobQueue;
 import org.joq4j.Task;
-import org.joq4j.TaskOptions;
 import org.joq4j.backend.MemoryBackend;
 import org.joq4j.broker.MemoryBroker;
 import org.junit.After;
@@ -11,7 +11,6 @@ import org.junit.Test;
 
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -54,26 +53,10 @@ public class JobImplTest {
 
     @Test
     public void getId() {
-        JobImpl job1 = new JobImpl(queue.name(), task);
-        JobImpl job2 = new JobImpl(queue.name(), task);
+        Job job1 = Job.builder().task(task).build();
+        Job job2 = Job.builder().task(task).build();
         assertNotEquals(job1.id(), job2.id());
         assertNotNull(UUID.fromString(job1.id()));
-    }
-
-    @Test
-    public void getOptions() {
-        TaskOptions options = new TaskOptions()
-                .name("test")
-                .description("demo job");
-        JobImpl job = new JobImpl(queue.name(), task, options);
-        assertEquals(options.name(), job.options().name());
-        assertEquals(options.description(), job.options().description());
-    }
-
-    @Test
-    public void getQueueName() {
-        JobImpl job = new JobImpl(queue.name(), task);
-        assertEquals(queue.name(), job.queueName());
     }
 
     @Test

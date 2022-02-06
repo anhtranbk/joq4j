@@ -1,10 +1,10 @@
-package org.joq4j.encoding;
+package org.joq4j.serde;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Base64;
+import java.nio.charset.StandardCharsets;
 
 public interface MessageEncoder {
 
@@ -16,20 +16,19 @@ public interface MessageEncoder {
         return bos.toByteArray();
     }
 
-    default <T> String writeAsBase64(T input) {
+    default <T> String writeAsString(T input) {
         byte[] b = write(input);
-        return Base64.getEncoder().encodeToString(b);
+        return new String(b);
     }
 
-    <T> T read(InputStream in);
+    <T> T read(InputStream in, Class<T> tClass);
 
-    default <T> T read(byte[] serialized) {
+    default <T> T read(byte[] serialized, Class<T> tClass) {
         ByteArrayInputStream bis = new ByteArrayInputStream(serialized);
-        return read(bis);
+        return read(bis, tClass);
     }
 
-    default <T> T readFromBase64(String b64Str) {
-        byte[] raw = Base64.getDecoder().decode(b64Str);
-        return read(raw);
+    default <T> T read(String str, Class<T> tClass) {
+        return read(str.getBytes(StandardCharsets.US_ASCII), tClass);
     }
 }

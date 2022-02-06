@@ -9,11 +9,35 @@ import java.io.Closeable;
 
 public interface StorageBackend extends Closeable {
 
+    String FIELD_STATE = "state";
+    String FIELD_RESULT = "result";
+    String FIELD_ERROR = "error";
+    String FIELD_QUEUED_AT = "queued_at";
+    String FIELD_STARTED_AT = "started_at";
+    String FIELD_FINISHED_AT = "finished_at";
+
+    String FIELD_WORKER = "worker";
+    String FIELD_TASK = "task";
+    String FIELD_ID = "id";
+    String FIELD_GROUP_ID = "group_id";
+    String FIELD_NAME = "name";
+    String FIELD_DESCRIPTION = "desc";
+
+    String FIELD_ETA = "eta";
+    String FIELD_TIMEOUT = "timeout";
+    String FIELD_MAX_RETRIES = "max_retries";
+    String FIELD_RETRY_DELAY = "retry_delay";
+    String FIELD_PRIORITY = "priority";
+
     void storeJob(Job job);
+
+    Job fetchJob(String jobId);
 
     JobState getState(String jobId);
 
     void setState(String jobId, JobState status);
+
+    void setWorker(String jobId, String worker);
 
     void markAsSuccess(String jobId, Object result);
 
@@ -44,13 +68,18 @@ public interface StorageBackend extends Closeable {
     }
 
     default boolean isJobStarted(String jobId) {
-        return this.getState(jobId) == JobState.RUNNING;
+        return this.getState(jobId) == JobState.STARTED;
     }
 
     default boolean isJobDone(String jobId) {
         JobState state = getState(jobId);
-        return state.equals(JobState.SUCCESS) || state.equals(JobState.FAILURE)
+        return state.equals(JobState.SUCCESS)
+                || state.equals(JobState.FAILURE)
                 || state.equals(JobState.CANCELLED);
+    }
+
+    default boolean isJobPaused(String jobId) {
+        return this.getState(jobId) == JobState.PAUSED;
     }
 
     default boolean isJobSuccess(String jobId) {

@@ -5,24 +5,26 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import org.joq4j.common.utils.Strings;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * @author <a href="https://github.com/tjeubaoit">tjeubaoit</a>
  */
 @Accessors(chain = true, fluent = true)
 public @Data class ConnectionUrl {
-
     private String scheme;
     private String host;
     private int port;
     private String username;
     private String password;
     private String database;
+
     @Getter(AccessLevel.MODULE)
-    private Map<String, String> parameters = new HashMap<>();
+    private Map<String, String> parameters = new TreeMap<>();
 
     @Override
     public String toString() {
@@ -41,14 +43,17 @@ public @Data class ConnectionUrl {
     public String asString(boolean withCredentials) {
         StringBuilder sb = new StringBuilder();
         sb.append(scheme).append("://");
-        if (username != null && password != null && withCredentials) {
-            sb.append(username).append(":").append(password).append("@");
+        if (withCredentials && Strings.isNonEmpty(password)) {
+            sb.append(username != null ? username : "");
+            sb.append(":").append(password).append("@");
         }
         sb.append(host);
         if (port != 0) {
             sb.append(":").append(port);
         }
-        sb.append("/").append(database);
+        if (database != null) {
+            sb.append("/").append(database);
+        }
         if (!parameters.isEmpty()) {
             int i = 0;
             for (Map.Entry<String, String> e : parameters.entrySet()) {
@@ -78,23 +83,26 @@ public @Data class ConnectionUrl {
                 tmp = p2[0];
             }
 
-            String[] p4 = tmp.split("/");
+            String[] p3 = tmp.split("\\?");
+            String[] p4 = p3[0].split("/");
+            if (p4.length > 1) {
+                uri.database(p4[1]);
+            }
             String[] p5 = p4[0].split(":");
             if (p5.length > 1) {
                 uri.port(Integer.parseInt(p5[1]));
             }
             uri.host(p5[0]);
 
-            String[] p6 = p4[1].split("\\?");
-            uri.database(p6[0]);
-
-            String[] p7 = p6[1].split("&");
-            Map<String, String> m = new HashMap<>(p7.length);
-            for (String q : p7) {
-                String[] p8 = q.split("=");
-                m.put(p8[0], p8[1]);
+            if (p3.length > 1) {
+                String[] p6 = p3[1].split("&");
+                Map<String, String> m = new HashMap<>(p6.length);
+                for (String q : p6) {
+                    String[] p7 = q.split("=");
+                    m.put(p7[0], p7[1]);
+                }
+                uri.parameters(m);
             }
-            uri.parameters(m);
 
             return uri;
         } catch (Exception e) {

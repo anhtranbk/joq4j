@@ -155,10 +155,18 @@ public class Strings {
     }
 
     public static byte[] toBytes(String value) {
-        return value.getBytes(StandardCharsets.UTF_8);
+        return toBytes(value, false);
+    }
+
+    public static byte[] toBytes(String value, boolean ascii) {
+        return value.getBytes(ascii ? StandardCharsets.US_ASCII : StandardCharsets.UTF_8);
     }
 
     public static String fromBytes(byte[] bytes) {
-        return new String(bytes, StandardCharsets.UTF_8);
+        return fromBytes(bytes, false);
+    }
+
+    public static String fromBytes(byte[] bytes, boolean ascii) {
+        return new String(bytes, ascii ? StandardCharsets.US_ASCII : StandardCharsets.UTF_8);
     }
 }

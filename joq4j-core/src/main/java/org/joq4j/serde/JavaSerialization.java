@@ -1,10 +1,11 @@
 package org.joq4j.serde;
 
+import org.joq4j.common.utils.Base64s;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Base64;
 
 public interface JavaSerialization {
 
@@ -18,7 +19,7 @@ public interface JavaSerialization {
 
     default <T> String serializeAsBase64(T input, Class<T> tClass) {
         byte[] b = serialize(input, tClass);
-        return Base64.getEncoder().encodeToString(b);
+        return Base64s.encodeAsString(b, false);
     }
 
     <T> T deserialize(InputStream in, Class<T> tClass);
@@ -29,7 +30,7 @@ public interface JavaSerialization {
     }
 
     default <T> T deserializeFromBase64(String b64Str, Class<T> tClass) {
-        byte[] raw = Base64.getDecoder().decode(b64Str);
+        byte[] raw = Base64s.decode(b64Str, false);
         return deserialize(raw, tClass);
     }
 }

@@ -1,10 +1,11 @@
 package org.joq4j.serde;
 
+import org.joq4j.common.utils.Strings;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 
 public interface MessageEncoder {
 
@@ -18,7 +19,7 @@ public interface MessageEncoder {
 
     default <T> String writeAsString(T input) {
         byte[] b = write(input);
-        return new String(b);
+        return Strings.fromBytes(b, true);
     }
 
     <T> T read(InputStream in, Class<T> tClass);
@@ -29,6 +30,6 @@ public interface MessageEncoder {
     }
 
     default <T> T read(String str, Class<T> tClass) {
-        return read(str.getBytes(StandardCharsets.US_ASCII), tClass);
+        return read(Strings.toBytes(str, true), tClass);
     }
 }

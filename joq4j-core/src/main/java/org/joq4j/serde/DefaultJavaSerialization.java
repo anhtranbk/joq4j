@@ -14,7 +14,7 @@ public class DefaultJavaSerialization implements JavaSerialization {
             ObjectOutputStream os = new ObjectOutputStream(out);
             os.writeObject(input);
         } catch (Exception e) {
-            throw new EncodingException(e);
+            throw new SerializationException(e);
         }
     }
 
@@ -24,7 +24,7 @@ public class DefaultJavaSerialization implements JavaSerialization {
             ObjectInputStream is = new ObjectInputStream(in);
             return (T) is.readObject();
         } catch (Exception e) {
-            throw new EncodingException(e);
+            throw new SerializationException(e);
         }
     }
 }

@@ -32,7 +32,7 @@ public class JacksonMessageEncoder implements MessageEncoder {
         try {
             om.writeValue(out, input);
         } catch (IOException e) {
-            throw new EncodingException(e);
+            throw new SerializationException(e);
         }
     }
 
@@ -41,7 +41,7 @@ public class JacksonMessageEncoder implements MessageEncoder {
         try {
             return om.readValue(in, tClass);
         } catch (IOException e) {
-            throw new EncodingException(e);
+            throw new SerializationException(e);
         }
     }
 }

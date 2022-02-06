@@ -1,5 +1,7 @@
 package org.joq4j.common.utils;
 
+import org.joq4j.exceptions.ReflectionException;
+
 import java.lang.reflect.InvocationTargetException;
 
 @SuppressWarnings("unchecked")
@@ -16,7 +18,7 @@ public class Reflects {
         try {
             return c.newInstance();
         } catch (IllegalAccessException | InstantiationException | NullPointerException e) {
-            throw new RuntimeException(e);
+            throw new ReflectionException(e);
         }
     }
 
@@ -24,7 +26,7 @@ public class Reflects {
         try {
             return (T) mainCl.loadClass(className).newInstance();
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            throw new ReflectionException(e);
         }
     }
 
@@ -33,7 +35,7 @@ public class Reflects {
             return (T) mainCl.loadClass(className).getConstructor(parameterTypes).newInstance(parameters);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException
                 | NoSuchMethodException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            throw new ReflectionException(e);
         }
     }
 }

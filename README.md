@@ -1,2 +1,2 @@
 # joq4j
-Distributed task queue for Java inspired by redis-queue and Celery
+Simple distributed task queue for Java inspired by redis-queue and Celery

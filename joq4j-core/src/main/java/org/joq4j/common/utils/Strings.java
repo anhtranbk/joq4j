@@ -125,17 +125,17 @@ public class Strings {
     }
 
     public static String firstCharacters(String source, int numChars, boolean withThreeDot, int skip) {
-        try {
-            return source.substring(skip, numChars) + (withThreeDot ? "..." : "");
-        } catch (IndexOutOfBoundsException ignored) {
-            return source;
+        if (skip + numChars < source.length()) {
+            return source.substring(skip, skip + numChars) + (withThreeDot ? "..." : "");
+        } else {
+            return source.substring(skip);
         }
     }
     public static String firstCharacters(String source, int numChars) {
         return firstCharacters(source, numChars, true, 0);
     }
     public static String firstCharacters(String source, int numChars, int skip) {
-        return firstCharacters(source, numChars, false, skip);
+        return firstCharacters(source, numChars, true, skip);
     }
 
     public static String remove4bytesUnicodeSymbols(String source) {

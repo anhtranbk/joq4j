@@ -94,7 +94,7 @@ public class JobQueueImplTest {
                     .build());
 
             List<Job> jobs = queue.getPendingJobs();
-            Job job = queue.pop("test");
+            Job job = queue.pop("test", 100);
             assertEquals(job.id(), jobs.get(0).id());
             assertEquals(job.id(), ar.getJobId());
         }
@@ -116,11 +116,11 @@ public class JobQueueImplTest {
                 .build());
 
         for (int i = 0; i < numJobs; i++) {
-            Job job = queue.pop("test");
+            Job job = queue.pop("test", 100);
             assertEquals("job_" + i, job.name());
             assertEquals("job_description_" + i, job.description());
         }
-        Job job = queue.pop("test");
+        Job job = queue.pop("test", 100);
         assertEquals("job_test", job.name());
         assertTrue(job.description().isEmpty());
     }

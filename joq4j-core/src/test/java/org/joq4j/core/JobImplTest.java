@@ -5,14 +5,13 @@ import org.joq4j.JobQueue;
 import org.joq4j.Task;
 import org.joq4j.backend.MemoryBackend;
 import org.joq4j.broker.MemoryBroker;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class JobImplTest {
 
@@ -35,7 +34,7 @@ public class JobImplTest {
     private JobQueueImpl queue;
     private Task task = new SimpleTask(4, 9);
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         task = new SimpleTask(4, 9);
         queue = (JobQueueImpl) JobQueue.builder()
@@ -45,7 +44,7 @@ public class JobImplTest {
                 .build();
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         queue.backend().close();
         queue.broker().close();

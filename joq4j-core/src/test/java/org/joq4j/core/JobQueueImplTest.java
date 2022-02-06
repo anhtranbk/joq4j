@@ -1,28 +1,26 @@
 package org.joq4j.core;
 
 import org.joq4j.AsyncResult;
+import org.joq4j.Job;
 import org.joq4j.JobQueue;
 import org.joq4j.Task;
-import org.joq4j.Job;
 import org.joq4j.backend.MemoryBackend;
 import org.joq4j.broker.MemoryBroker;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class JobQueueImplTest {
 
     private JobQueueImpl queue;
     private Task task;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         task = Task.doNothing();
         queue = (JobQueueImpl) JobQueue.builder()
@@ -32,7 +30,7 @@ public class JobQueueImplTest {
                 .build();
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         queue.broker().close();
         queue.broker().close();

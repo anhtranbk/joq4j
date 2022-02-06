@@ -12,6 +12,8 @@ import org.joq4j.QueueOptions;
 import org.joq4j.Task;
 import org.joq4j.backend.StorageBackend;
 import org.joq4j.broker.Broker;
+import org.joq4j.common.utils.Strings;
+import org.joq4j.common.utils.Threads;
 import org.joq4j.config.Config;
 import org.joq4j.serde.MessageEncoder;
 import org.slf4j.Logger;
@@ -76,10 +78,17 @@ public class JobQueueImpl implements JobQueue {
     }
 
     @Override
-    public Job pop(String worker) {
-        String serializedJob = broker.pop(queueKey);
-        Job job = messageEncoder.read(serializedJob, JobBuilder.class).build();
-        backend.setWorker(job.id(), worker);
-        return job;
+    public Job pop(String worker, long timeout) {
+        final long timeoutAt = System.currentTimeMillis() + timeout;
+        while (System.currentTimeMillis() < timeoutAt) {
+            String serializedJob = broker.pop(queueKey);
+            if (Strings.isNonEmpty(serializedJob)) {
+                Job job = messageEncoder.read(serializedJob, JobBuilder.class).build();
+                backend.setWorker(job.id(), worker);
+                return job;
+            }
+            Threads.sleep(10);
+        }
+        return null;
     }
 }

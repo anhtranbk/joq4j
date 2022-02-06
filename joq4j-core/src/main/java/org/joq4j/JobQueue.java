@@ -31,7 +31,7 @@ public interface JobQueue {
 
     AsyncResult enqueue(Job job);
 
-    Job pop(String worker);
+    Job pop(String worker, long timeout);
 
     default List<Job> getQueueJobs() {
         throw new UnsupportedOperationException();

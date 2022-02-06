@@ -5,7 +5,7 @@
   <parent>
     <artifactId>joq4j-parent</artifactId>
     <groupId>org.joq4j</groupId>
-    <version>1.0</version>
+    <version>0.2.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -22,7 +22,6 @@
     <dependency>
       <groupId>redis.clients</groupId>
       <artifactId>jedis</artifactId>
-      <version>3.2.0</version>
     </dependency>
   </dependencies>
 </project>

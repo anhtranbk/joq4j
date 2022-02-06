@@ -22,14 +22,19 @@ public class SimpleWorker {
                 .backend(redisUrl)
                 .build();
 
-        //noinspection InfiniteLoopStatement
-        while (true) {
+        int counter = 0;
+        while (counter < 60) {
             Job job = queue.pop("simple", 100);
             if (job != null) {
+                counter = 0;
                 logger.info("Received new job: " + job);
                 Object result = job.task().call();
                 logger.info("Processed job: " + job.id() + ". Result: " + result);
-            } else Threads.sleepSeconds(1);
+            } else {
+                Threads.sleepSeconds(1);
+                counter++;
+            }
         }
+        System.out.println("Wait too long for new job. Exiting...");
     }
 }

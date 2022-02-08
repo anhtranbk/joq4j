@@ -11,8 +11,8 @@ import org.joq4j.config.ConfigDescriptor;
 import org.joq4j.config.Configurable;
 
 @Accessors(chain = true, fluent = true)
-public @Data
-class RedisConfig implements Configurable {
+@Data
+public class RedisConfig implements Configurable {
 
     @ConfigDescriptor(name = "redis.url")
     @Getter(AccessLevel.NONE)

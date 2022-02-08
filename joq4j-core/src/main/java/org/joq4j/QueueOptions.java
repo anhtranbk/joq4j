@@ -8,7 +8,8 @@ import org.joq4j.serde.JacksonMessageEncoder;
 import org.joq4j.serde.MessageEncoder;
 
 @Accessors(chain = true, fluent = true)
-public @Data class QueueOptions implements Configurable {
+@Data
+public class QueueOptions implements Configurable {
 
     private int maxSize;
 

@@ -12,6 +12,7 @@ import org.joq4j.QueueOptions;
 import org.joq4j.Task;
 import org.joq4j.backend.StorageBackend;
 import org.joq4j.broker.Broker;
+import org.joq4j.common.utils.Reflects;
 import org.joq4j.common.utils.Strings;
 import org.joq4j.common.utils.Threads;
 import org.joq4j.config.Config;
@@ -43,7 +44,8 @@ public class JobQueueImpl implements JobQueue {
         this.options = new QueueOptions();
         ConfigHelper.injectFields(this.options, conf);
 
-        this.messageEncoder = options.messageEncoder();
+        logger.info("Load MessageEncoder class: " + this.options.messageEncoderClass());
+        this.messageEncoder = Reflects.newInstance(this.options.messageEncoderClass());
     }
 
     @Override

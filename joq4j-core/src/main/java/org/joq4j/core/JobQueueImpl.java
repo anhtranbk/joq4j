@@ -12,9 +12,11 @@ import org.joq4j.QueueOptions;
 import org.joq4j.Task;
 import org.joq4j.backend.StorageBackend;
 import org.joq4j.broker.Broker;
+import org.joq4j.common.utils.Reflects;
 import org.joq4j.common.utils.Strings;
 import org.joq4j.common.utils.Threads;
 import org.joq4j.config.Config;
+import org.joq4j.config.ConfigHelper;
 import org.joq4j.serde.MessageEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,12 +41,11 @@ public class JobQueueImpl implements JobQueue {
         this.backend = backend;
         this.queueKey = QUEUE_KEY_PREFIX + this.name;
 
-        QueueOptions options = new QueueOptions();
-        options.configure(conf);
-
         this.options = new QueueOptions();
-        this.options.configure(conf);
-        this.messageEncoder = options.messageEncoder();
+        ConfigHelper.injectFields(this.options, conf);
+
+        logger.info("Load MessageEncoder class: " + this.options.messageEncoderClass());
+        this.messageEncoder = Reflects.newInstance(this.options.messageEncoderClass());
     }
 
     @Override

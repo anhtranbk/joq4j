@@ -8,11 +8,13 @@ import org.joq4j.common.net.ConnectionUrl;
 import org.joq4j.common.utils.Strings;
 import org.joq4j.config.Config;
 import org.joq4j.config.ConfigDescriptor;
+import org.joq4j.config.ConfigHelper;
 import org.joq4j.config.Configurable;
 
 @Accessors(chain = true, fluent = true)
-public @Data
-class RedisConfig implements Configurable {
+@Data
+@Configurable
+public class RedisConfig {
 
     @ConfigDescriptor(name = "redis.url")
     @Getter(AccessLevel.NONE)
@@ -54,7 +56,7 @@ class RedisConfig implements Configurable {
     }
 
     public RedisConfig(Config conf) {
-        this.configure(conf);
+        ConfigHelper.injectFields(this, conf);
     }
 
     public String url(boolean withCredentials) {

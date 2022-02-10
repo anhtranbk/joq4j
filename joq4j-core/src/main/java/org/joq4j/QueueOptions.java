@@ -5,10 +5,11 @@ import lombok.experimental.Accessors;
 import org.joq4j.config.ConfigDescriptor;
 import org.joq4j.config.Configurable;
 import org.joq4j.serde.JacksonMessageEncoder;
-import org.joq4j.serde.MessageEncoder;
 
 @Accessors(chain = true, fluent = true)
-public @Data class QueueOptions implements Configurable {
+@Data
+@Configurable
+public class QueueOptions {
 
     private int maxSize;
 
@@ -16,7 +17,7 @@ public @Data class QueueOptions implements Configurable {
 
     private long defaultTimeout = 1000;
 
-    private MessageEncoder messageEncoder = new JacksonMessageEncoder();
+    private String messageEncoderClass = JacksonMessageEncoder.class.getName();
 
     @ConfigDescriptor(name = "joq4j.worker.storeResult")
     private boolean storeResult = true;

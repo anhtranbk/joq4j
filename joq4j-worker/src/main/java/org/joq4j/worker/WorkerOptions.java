@@ -1,4 +1,4 @@
-package org.joq4.worker;
+package org.joq4j.worker;
 
 import lombok.Data;
 import org.joq4j.config.ConfigDescriptor;
@@ -14,8 +14,6 @@ public class WorkerOptions {
     private String brokerUrl;
 
     private String backendUrl;
-
-    private String configUri;
 
     private String workDir;
 

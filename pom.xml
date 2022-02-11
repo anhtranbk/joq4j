@@ -26,6 +26,7 @@
     <module>joq4j-core</module>
     <module>joq4j-worker</module>
     <module>joq4j-redis</module>
+      <module>joq4j-kafka</module>
   </modules>
 
   <dependencyManagement>
@@ -91,6 +92,13 @@
         <artifactId>jedis</artifactId>
         <version>3.8.0</version>
       </dependency>
+      <!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients -->
+      <dependency>
+        <groupId>org.apache.kafka</groupId>
+        <artifactId>kafka-clients</artifactId>
+        <version>3.1.0</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 

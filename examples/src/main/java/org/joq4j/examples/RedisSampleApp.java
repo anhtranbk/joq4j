@@ -2,8 +2,6 @@ package org.joq4j.examples;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
 import org.joq4j.AsyncResult;
 import org.joq4j.Job;
 import org.joq4j.JobBuilder;
@@ -34,8 +32,6 @@ public class RedisSampleApp {
                 .build();
 
         loopProduceConsumeJob(queue);
-//        executeJobAndGetResult(queue);
-//        testCustomSerializer();
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -89,9 +85,5 @@ public class RedisSampleApp {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    static void testProcessExecutor() {
-        CommandLineParser parser = new DefaultParser();
     }
 }

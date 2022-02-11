@@ -22,7 +22,6 @@ public class RedisBrokerFactory implements BrokerFactory {
 
     static {
         BrokerFactoryRegistry.addRegistry("redis", RedisBrokerFactory.class);
-        BrokerFactoryRegistry.addRegistry("rediss", RedisBrokerFactory.class);
         LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME).debug("BrokerFactory registry added scheme redis");
     }
 }

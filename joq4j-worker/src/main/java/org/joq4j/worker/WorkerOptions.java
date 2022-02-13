@@ -4,6 +4,8 @@ import lombok.Data;
 import org.joq4j.config.ConfigDescriptor;
 import org.joq4j.config.Configurable;
 
+import java.util.List;
+
 @Data
 @Configurable
 // Almost options inspired-by Celery worker
@@ -34,7 +36,7 @@ public class WorkerOptions {
     private int maxTasksPerExecutor;
 
     // Queue options
-    private String queues;
+    private List<String> queues;
 
     private String excludeQueues;
 

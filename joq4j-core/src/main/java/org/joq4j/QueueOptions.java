@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.joq4j.config.ConfigDescriptor;
 import org.joq4j.config.Configurable;
-import org.joq4j.serde.JacksonMessageEncoder;
 
 @Accessors(chain = true, fluent = true)
 @Data
@@ -17,14 +16,15 @@ public class QueueOptions {
 
     private long defaultTimeout = 1000;
 
-    private String messageEncoderClass = JacksonMessageEncoder.class.getName();
+    @ConfigDescriptor(
+            name = "queue.messageEncoderClass",
+            defaultValue = "org.joq4j.serde.JacksonMessageEncoder"
+    )
+    private String messageEncoderClass;
 
-    @ConfigDescriptor(name = "joq4j.worker.storeResult")
+    @ConfigDescriptor(name = "queue.storeResult")
     private boolean storeResult = true;
 
-    @ConfigDescriptor(name = "joq4j.worker.storeErrorEventIfIgnored")
-    private boolean storeErrorEventIfIgnored = true;
-
-    @ConfigDescriptor(name = "joq4j.worker.sentEvents")
+    @ConfigDescriptor(name = "queue.sentTaskEvents")
     private boolean sentEvents = false;
 }

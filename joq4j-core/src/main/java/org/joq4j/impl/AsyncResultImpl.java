@@ -1,4 +1,4 @@
-package org.joq4j.core;
+package org.joq4j.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.joq4j.AsyncResult;

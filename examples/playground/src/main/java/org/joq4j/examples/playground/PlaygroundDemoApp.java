@@ -1,4 +1,4 @@
-package org.joq4j.examples;
+package org.joq4j.examples.playground;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -21,7 +21,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class RedisSampleApp {
+public class PlaygroundDemoApp {
 
     public static void main(String[] args) throws Exception {
         Class.forName(RedisBrokerFactory.class.getName());

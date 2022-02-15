@@ -1,8 +1,10 @@
-package org.joq4.worker;
+package org.joq4j.worker;
 
 import lombok.Data;
 import org.joq4j.config.ConfigDescriptor;
 import org.joq4j.config.Configurable;
+
+import java.util.List;
 
 @Data
 @Configurable
@@ -14,8 +16,6 @@ public class WorkerOptions {
     private String brokerUrl;
 
     private String backendUrl;
-
-    private String configUri;
 
     private String workDir;
 
@@ -36,7 +36,7 @@ public class WorkerOptions {
     private int maxTasksPerExecutor;
 
     // Queue options
-    private String queues;
+    private List<String> queues;
 
     private String excludeQueues;
 

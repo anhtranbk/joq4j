@@ -1,4 +1,4 @@
-package org.joq4j.examples;
+package org.joq4j.examples.playground;
 
 import org.joq4j.Job;
 import org.joq4j.JobQueue;
@@ -21,6 +21,7 @@ public class SimpleWorker {
                 .broker(redisUrl)
                 .backend(redisUrl)
                 .build();
+        logger.info("Waiting for message...");
 
         int counter = 0;
         while (counter < 60) {

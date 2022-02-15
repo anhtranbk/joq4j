@@ -61,7 +61,7 @@ public class Config {
             // extra properties from file file will have higher priority
             addResource(path);
         } catch (IOException e) {
-            throw new ConfigException(e);
+            throw new ConfigurationException(e);
         }
     }
 
@@ -69,7 +69,7 @@ public class Config {
         try {
             addResource(is);
         } catch (IOException e) {
-            throw new ConfigException(e);
+            throw new ConfigurationException(e);
         }
     }
 
@@ -134,7 +134,7 @@ public class Config {
     public String getString(String key) {
         String val = getProperty(key);
         if (Strings.isNullOrEmpty(val)) {
-            throw new ConfigException(new NoSuchElementException());
+            throw new ConfigurationException(new NoSuchElementException());
         }
         return val;
     }
@@ -151,7 +151,7 @@ public class Config {
         try {
             return Integer.parseInt(getProperty(key));
         } catch (Exception e) {
-            throw new ConfigException(e);
+            throw new ConfigurationException(e);
         }
     }
 
@@ -167,7 +167,7 @@ public class Config {
         try {
             return Long.parseLong(getProperty(key));
         } catch (Exception e) {
-            throw new ConfigException(e);
+            throw new ConfigurationException(e);
         }
     }
 
@@ -183,7 +183,7 @@ public class Config {
         try {
             return new BigInteger(getProperty(key));
         } catch (Exception e) {
-            throw new ConfigException(e);
+            throw new ConfigurationException(e);
         }
     }
 
@@ -199,7 +199,7 @@ public class Config {
         try {
             return Double.parseDouble(getProperty(key));
         } catch (Exception e) {
-            throw new ConfigException(e);
+            throw new ConfigurationException(e);
         }
     }
 
@@ -215,7 +215,7 @@ public class Config {
         try {
             return Float.parseFloat(getProperty(key));
         } catch (Exception e) {
-            throw new ConfigException(e);
+            throw new ConfigurationException(e);
         }
     }
 
@@ -231,7 +231,7 @@ public class Config {
         try {
             return Boolean.parseBoolean(getProperty(key));
         } catch (Exception e) {
-            throw new ConfigException(e);
+            throw new ConfigurationException(e);
         }
     }
 
@@ -247,7 +247,7 @@ public class Config {
         try {
             return Arrays.asList(getProperty(key).split(","));
         } catch (Exception e) {
-            throw new ConfigException(e);
+            throw new ConfigurationException(e);
         }
     }
 

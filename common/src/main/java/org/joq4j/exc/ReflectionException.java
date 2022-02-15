@@ -1,4 +1,4 @@
-package org.joq4j.exceptions;
+package org.joq4j.exc;
 
 public class ReflectionException extends RuntimeException {
 

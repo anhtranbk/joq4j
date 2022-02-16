@@ -23,6 +23,7 @@
 
   <modules>
     <module>examples</module>
+    <module>common</module>
     <module>joq4j-core</module>
     <module>joq4j-worker</module>
     <module>joq4j-redis</module>

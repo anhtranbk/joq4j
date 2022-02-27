@@ -23,7 +23,6 @@ public class RedisBackendFactory implements BackendFactory {
 
     static {
         BackendFactoryRegistry.addRegistry("redis", RedisBackendFactory.class);
-        BackendFactoryRegistry.addRegistry("rediss", RedisBackendFactory.class);
         LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME).debug("BackendFactory registry added scheme redis");
     }
 }

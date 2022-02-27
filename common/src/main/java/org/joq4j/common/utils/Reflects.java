@@ -1,6 +1,6 @@
 package org.joq4j.common.utils;
 
-import org.joq4j.exceptions.ReflectionException;
+import org.joq4j.exc.ReflectionException;
 
 import java.lang.reflect.InvocationTargetException;
 

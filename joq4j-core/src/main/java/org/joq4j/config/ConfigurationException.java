@@ -23,25 +23,25 @@ import org.joq4j.Joq4jException;
 /**
  * @author <a href="https://github.com/tjeubaoit">tjeubaoit</a>
  */
-public class ConfigException extends Joq4jException {
+public class ConfigurationException extends Joq4jException {
 
-    public ConfigException(String message) {
+    public ConfigurationException(String message) {
         super(message);
     }
 
-    public ConfigException(String message, Object... args) {
+    public ConfigurationException(String message, Object... args) {
         super(message, args);
     }
 
-    public ConfigException(String message, Throwable cause) {
+    public ConfigurationException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public ConfigException(String message, Throwable cause, Object... args) {
+    public ConfigurationException(String message, Throwable cause, Object... args) {
         super(message, cause, args);
     }
 
-    public ConfigException(Throwable cause) {
+    public ConfigurationException(Throwable cause) {
         super(cause);
     }
 }

@@ -22,7 +22,7 @@ public interface ConfigHelper {
                 String name = descriptor.name();
                 String defVal = descriptor.defaultValue();
                 if (!conf.containsKey(name) && !descriptor.allowMissing()) {
-                    throw new ConfigException("Missing config value for key: " + name);
+                    throw new ConfigurationException("Missing config value for key: " + name);
                 }
 
                 Class<?> type = field.getType();
@@ -61,7 +61,7 @@ public interface ConfigHelper {
                     field.set(target, conf.getString(name, defVal));
                 }
             } catch (Exception e) {
-                throw new ConfigException(e);
+                throw new ConfigurationException(e);
             } finally {
                 field.setAccessible(false);
             }

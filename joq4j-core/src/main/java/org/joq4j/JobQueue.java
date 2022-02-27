@@ -11,7 +11,7 @@ import org.joq4j.broker.BrokerFactory;
 import org.joq4j.broker.BrokerFactoryRegistry;
 import org.joq4j.broker.MemoryBroker;
 import org.joq4j.config.Config;
-import org.joq4j.core.JobQueueImpl;
+import org.joq4j.impl.JobQueueImpl;
 
 import java.util.List;
 

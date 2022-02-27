@@ -27,6 +27,7 @@
     <module>joq4j-core</module>
     <module>joq4j-worker</module>
     <module>joq4j-redis</module>
+    <module>joq4j-rabbitmq</module>
   </modules>
 
   <dependencyManagement>
@@ -98,6 +99,13 @@
         <groupId>redis.clients</groupId>
         <artifactId>jedis</artifactId>
         <version>3.8.0</version>
+      </dependency>
+
+      <!-- https://mvnrepository.com/artifact/com.rabbitmq/amqp-client -->
+      <dependency>
+        <groupId>com.rabbitmq</groupId>
+        <artifactId>amqp-client</artifactId>
+        <version>5.14.2</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

@@ -22,6 +22,7 @@ public @Data class ConnectionUrl {
     private String username;
     private String password;
     private String database;
+    private String virtualHost;
 
     @Getter(AccessLevel.MODULE)
     private Map<String, String> parameters = new TreeMap<>();
@@ -53,6 +54,9 @@ public @Data class ConnectionUrl {
         }
         if (database != null) {
             sb.append("/").append(database);
+        }
+        if (virtualHost != null) {
+            sb.append(virtualHost);
         }
         if (!parameters.isEmpty()) {
             int i = 0;
